@@ -98,6 +98,7 @@ function nextLevel() {
     level += 0.25;
   }
   randomiseKeys(Math.floor(level));
+  document.querySelector(".level-number").innerText = Math.floor(level);
 }
 
 let distanceX = 0;
@@ -114,8 +115,8 @@ function rhythmSpeed() {
 }
 
 // setInterval(rhythmSpeed, 10);
-// setInterval(nextLevel, 20);
-// setInterval(randomiseKeys, 20);
+setInterval(nextLevel, 4000);
+setInterval(randomiseKeys, 4000);
 
 window.addEventListener("keydown", (e) => {
   //   for (let i = 0; i < currentKeys.length; i++) {
@@ -148,6 +149,7 @@ window.addEventListener("keydown", (e) => {
     document.querySelector(".arrow-keys").innerHTML = "";
     if (!document.querySelector(".key")) {
       if (grading() !== "miss") {
+        document.querySelector(".grade").innerText = grading();
         console.log("success!");
       }
     } else {
@@ -162,6 +164,28 @@ window.addEventListener("keydown", (e) => {
 
 // timestamp;
 // 4s
-randomiseKeys(9);
+randomiseKeys(1);
 console.log(currentKeys);
 // console.log(Date.now());
+
+let startDate = "startdate";
+document.querySelector("input").addEventListener("click", () => {
+  setInterval(rhythmSpeed, 10);
+  startDate = Date.now();
+  console.log(startDate);
+  document.querySelector("input").removeEventListener("click", () => {
+    setInterval(rhythmSpeed, 10);
+    startDate = Date.now();
+    console.log(startDate);
+  });
+});
+
+function currentDate() {
+  let currentDate = Date.now();
+  if (currentDate - startDate > 2000) {
+    document.querySelector(".arrow-keys").innerHTML = "";
+    startDate = currentDate;
+  }
+}
+
+// setInterval(currentDate, 2000);

@@ -1,5 +1,5 @@
 body {
-  height: 100vh;
+  height: 95vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,6 +18,16 @@ body {
   flex-direction: row;
   width: 500px;
   justify-content: center;
+}
+
+.grade {
+  font-family: "Luckiest Guy", cursive;
+  font-size: 25px;
+  color: purple;
+  display: block;
+  width: 300px;
+  text-align: right;
+  margin-bottom: 5px;
 }
 
 .level {
