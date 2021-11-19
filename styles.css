@@ -48,10 +48,11 @@ body {
 
 .target {
   border-radius: 50%;
-  /* border: 0.5px solid white; */
-  background-color: lightblue;
-  width: 15px;
-  height: 15px;
+  border: 0.5px solid white;
+  background-color: red;
+  box-shadow: white;
+  width: 14px;
+  height: 14px;
 }
 
 .target-area {

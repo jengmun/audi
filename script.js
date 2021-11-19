@@ -16,6 +16,35 @@ const accuracy = {
   perfect: "<2",
 };
 
+const keyCodes = {
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
+};
+
+// const uniCode = {
+//   "&#8592": 37,
+//   "&#8593": 38,
+//   "&#8594": 39,
+//   "&#8595": 40,
+// };
+
+const uniCode = {
+  37: "&#8592",
+  38: "&#8593",
+  39: "&#8594",
+  40: "&#8595",
+};
+
+function randomiseKeys() {
+  const keyCode = Math.floor(Math.random() * 4) + 37;
+  const newArrowKey = document.createElement("button");
+  newArrowKey.setAttribute("value", keyCode);
+  newArrowKey.innerHTML = uniCode[keyCode];
+  document.querySelector(".arrow-keys").append(newArrowKey);
+}
+
 function grading() {
   const perfectDistance = 116;
   let deviation = Math.abs(perfectDistance - distanceX);
@@ -53,11 +82,16 @@ function rhythmSpeed() {
 
 // setInterval(rhythmSpeed, 10);
 
-window.addEventListener("keydown", () => {
-  console.log("hi");
+window.addEventListener("keydown", (e) => {
+  if (e.keyCode == document.querySelector("button").value) {
+    console.log("right");
+  }
 });
 
-const target = document.querySelector(".target");
-if (distanceX === 125) {
-  alert("perfect");
-}
+// create eventlistener for each button -> remove event listener after pressing
+
+console.log(document.querySelector(".rhythm-bar").style.width);
+
+// timestamp;
+// 4s
+randomiseKeys();
