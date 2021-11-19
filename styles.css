@@ -1,0 +1,99 @@
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: grey;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.upper-container {
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+  justify-content: center;
+}
+
+.level {
+  display: flex;
+  justify-self: flex-start;
+  width: 200px;
+  font-family: "Luckiest Guy", cursive;
+  color: white;
+}
+
+.level-number {
+  font-family: "Luckiest Guy", cursive;
+  color: orange;
+  margin-left: 5px;
+  font-size: 20px;
+}
+
+.rhythm-bar {
+  display: flex;
+  border-radius: 50px;
+  border: black 1px solid;
+  width: 200px;
+  height: 15px;
+  background-color: rgba(0, 0, 0, 0.3);
+  align-items: center;
+  position: relative;
+}
+
+.target {
+  border-radius: 50%;
+  /* border: 0.5px solid white; */
+  background-color: lightblue;
+  width: 15px;
+  height: 15px;
+}
+
+.target-area {
+  background-color: lightgreen;
+  opacity: 0.5;
+  width: 46px;
+  height: 15px;
+  position: absolute;
+  right: 53.5px;
+}
+
+.arrow-keys {
+  display: block;
+  border-radius: 50px;
+  border: black 1px solid;
+  width: 500px;
+  height: 60px;
+  margin: 10px;
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.score {
+  width: 200px;
+  height: 50px;
+  border: 1px black solid;
+  position: absolute;
+  right: 50px;
+  bottom: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer {
+  width: 200px;
+  height: 50px;
+  border: 1px black solid;
+  position: absolute;
+  left: 20px;
+  bottom: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
