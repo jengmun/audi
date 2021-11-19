@@ -103,25 +103,28 @@ function grading() {
     // alert("miss");
     grade = "miss";
   }
+  console.log(`this is my ${grade}`);
   scoreboard[grade] += 1;
   return grade;
 }
 
-let level = 1;
+let level = 8;
 
 function initialise() {
-  level = 1;
+  level = 8;
   randomiseKeys(level);
 }
 
 function nextLevel() {
   if (level < 6) {
     level++;
-  } else {
+  } else if (level < 9.75) {
     level += 0.25;
+  } else if (level === 9.75) {
+    level = 6;
   }
-  randomiseKeys(Math.floor(level));
   document.querySelector(".level-number").innerText = Math.floor(level);
+  randomiseKeys(Math.floor(level));
 }
 
 let distanceX = 0;
@@ -134,12 +137,10 @@ function rhythmSpeed() {
   if (distanceX === 185) {
     distanceX = 0;
   }
-  grading();
+  //   grading();
 }
 
 // setInterval(rhythmSpeed, 10);
-setInterval(nextLevel, 4000);
-setInterval(randomiseKeys, 4000);
 
 window.addEventListener("keydown", (e) => {
   //   for (let i = 0; i < currentKeys.length; i++) {
@@ -170,14 +171,17 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keydown", (e) => {
   if (e.keyCode === 32) {
     document.querySelector(".arrow-keys").innerHTML = "";
-    if (!document.querySelector(".key")) {
+    if (document.querySelector(".key") !== null) {
+      console.log("not null");
       if (grading() !== "miss") {
-        document.querySelector(".grade").innerText = grading();
         console.log("success!");
+        document.querySelector(".grade").innerText = grading();
       }
     } else {
       console.log("miss");
+      document.querySelector(".grade").innerText = "miss";
     }
+    console.log(document.querySelector(".key"));
   }
 });
 
@@ -187,21 +191,23 @@ window.addEventListener("keydown", (e) => {
 
 // timestamp;
 // 4s
-randomiseKeys(1);
+randomiseKeys(0);
+console.log(document.querySelector(".key"));
 console.log(currentKeys);
 // console.log(Date.now());
 
-let startDate = "startdate";
-document.querySelector("input").addEventListener("click", () => {
+function startGame(e) {
   setInterval(rhythmSpeed, 10);
+  setInterval(nextLevel, 4000);
+  setInterval(randomiseKeys, 4000);
   startDate = Date.now();
   console.log(startDate);
-  document.querySelector("input").removeEventListener("click", () => {
-    setInterval(rhythmSpeed, 10);
-    startDate = Date.now();
-    console.log(startDate);
-  });
-});
+  console.log(e.target);
+  e.target.remove();
+}
+
+let startDate = "startdate";
+document.querySelector("input").addEventListener("click", (e) => startGame(e));
 
 function currentDate() {
   let currentDate = Date.now();
