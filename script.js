@@ -39,6 +39,30 @@ const uniCode = {
   //   32: "&#160;",
 };
 
+const scoring = {
+  1: 1000,
+  2: 1500,
+  3: 2000,
+  4: 2500,
+  5: 3000,
+  6: 5000,
+  7: 6000,
+  8: 7000,
+  9: 8000,
+};
+
+const multiplier = {
+  miss: 0,
+  bad: 0.5,
+  cool: 1,
+  great: 1.5,
+  perfect: 2,
+};
+
+let score = 0;
+
+// score = multiplier.grade * scoring.level;
+
 let currentKeys = [];
 
 function randomiseKeys(level) {
@@ -57,31 +81,30 @@ function randomiseKeys(level) {
 
 let deviation = 20;
 
+let grade = "";
+
 function grading() {
   const perfectDistance = 116;
   let deviation = Math.abs(perfectDistance - distanceX);
 
   if (deviation < 2) {
-    console.log("perfect");
-    scoreboard.perfect += 1;
-    return "perfect";
+    grade = "perfect";
+    // console.log("perfect");
   } else if (deviation < 6) {
-    console.log("great");
-    scoreboard.great += 1;
-    return "great";
+    grade = "great";
+    // console.log("great");
   } else if (deviation < 10) {
-    console.log("cool");
-    scoreboard.cool += 1;
-    return "cool";
+    grade = "cool";
+    // console.log("cool");
   } else if (deviation < 15) {
-    console.log("bad");
-    scoreboard.bad += 1;
-    return "bad";
+    grade = "bad";
+    // console.log("bad");
   } else {
     // alert("miss");
-    scoreboard.miss += 1;
-    return "miss";
+    grade = "miss";
   }
+  scoreboard[grade] += 1;
+  return grade;
 }
 
 let level = 1;
