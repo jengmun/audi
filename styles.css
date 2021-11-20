@@ -88,11 +88,15 @@ body {
 }
 
 .key {
+  display: flex;
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  background-color: lightsteelblue;
+  background-color: royalblue;
   margin: 1.5px;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
 
 .pressed-key {
@@ -101,6 +105,10 @@ body {
   height: 50px;
   background-color: greenyellow;
   margin: 1.5px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  color: white;
 }
 
 .score {

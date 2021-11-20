@@ -9,11 +9,11 @@ const scoreboard = {
 };
 
 const accuracy = {
-  miss: ">15",
-  bad: "<15",
-  cool: "<10",
-  great: "<6",
-  perfect: "<2",
+  miss: ">1000",
+  bad: "<1000",
+  cool: "<600",
+  great: "<300",
+  perfect: "<100",
 };
 
 const keyCodes = {
@@ -57,19 +57,28 @@ const multiplier = {
   cool: 1,
   great: 1.5,
   perfect: 2,
+  //   chain: 2 ** num,
 };
 
+let level = 1;
 let score = 0;
+let currentKeys = [];
+let grade = "";
+let startDate = "startdate";
+let perfectTime = startDate + 4000;
+let distanceX = 0;
+let pressDate = 0;
+let bpm = 120;
+const playTime = (4 / bpm) * 60; // time taken for every 4 beats
+const roundTime = playTime * 2; // time taken for each round
 
 // score = multiplier.grade * scoring.level;
-
-let currentKeys = [];
 
 function randomiseKeys(level) {
   for (let i = 1; i <= level; i++) {
     const keyCode = Math.floor(Math.random() * 4) + 37;
 
-    const newArrowKey = document.createElement("button");
+    const newArrowKey = document.createElement("div");
     newArrowKey.setAttribute("value", keyCode);
     newArrowKey.className = "key";
     newArrowKey.innerHTML = uniCode[keyCode];
@@ -79,36 +88,40 @@ function randomiseKeys(level) {
   }
 }
 
-let deviation = 20;
-
-let grade = "";
+function increaseStartDate() {
+  startDate += 4000;
+  console.log(`start date = ${startDate}`);
+  perfectTime = startDate + 4000;
+  console.log(perfectTime);
+}
 
 function grading() {
-  const perfectDistance = 116;
-  let deviation = Math.abs(perfectDistance - distanceX);
+  //   const perfectDistance = 116;
+  //   let deviation = Math.abs(perfectDistance - distanceX);
 
-  if (deviation < 2) {
+  const deviation = Math.abs(pressDate - perfectTime);
+
+  if (deviation < 100) {
     grade = "perfect";
     // console.log("perfect");
-  } else if (deviation < 6) {
+  } else if (deviation < 300) {
     grade = "great";
     // console.log("great");
-  } else if (deviation < 10) {
+  } else if (deviation < 600) {
     grade = "cool";
     // console.log("cool");
-  } else if (deviation < 15) {
+  } else if (deviation < 1000) {
     grade = "bad";
     // console.log("bad");
   } else {
     // alert("miss");
     grade = "miss";
   }
+  console.log(deviation);
   console.log(`this is my ${grade}`);
   scoreboard[grade] += 1;
   return grade;
 }
-
-let level = 8;
 
 function initialise() {
   level = 8;
@@ -127,7 +140,6 @@ function nextLevel() {
   randomiseKeys(Math.floor(level));
 }
 
-let distanceX = 0;
 function rhythmSpeed() {
   document.querySelector(".target").style.transform = `translateX(${
     distanceX + 1
@@ -168,20 +180,26 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+// use pressDate - start date to calculate the accuracy of the timing of key pressed
+
 window.addEventListener("keydown", (e) => {
+  pressDate = Date.now();
+
   if (e.keyCode === 32) {
-    document.querySelector(".arrow-keys").innerHTML = "";
-    if (document.querySelector(".key") !== null) {
-      console.log("not null");
+    if (!document.querySelector(".key")) {
+      console.log(document.querySelector(".key"));
       if (grading() !== "miss") {
         console.log("success!");
         document.querySelector(".grade").innerText = grading();
       }
     } else {
       console.log("miss");
+      console.log(Date.now());
       document.querySelector(".grade").innerText = "miss";
+      console.log(pressDate - perfectTime);
     }
     console.log(document.querySelector(".key"));
+    document.querySelector(".arrow-keys").innerHTML = "";
   }
 });
 
@@ -191,7 +209,7 @@ window.addEventListener("keydown", (e) => {
 
 // timestamp;
 // 4s
-randomiseKeys(0);
+randomiseKeys(5);
 console.log(document.querySelector(".key"));
 console.log(currentKeys);
 // console.log(Date.now());
@@ -200,14 +218,18 @@ function startGame(e) {
   setInterval(rhythmSpeed, 10);
   setInterval(nextLevel, 4000);
   setInterval(randomiseKeys, 4000);
+  setInterval(increaseStartDate, 4000);
+
   startDate = Date.now();
+  perfectTime = startDate + 4000;
   console.log(startDate);
   console.log(e.target);
   e.target.remove();
 }
 
-let startDate = "startdate";
 document.querySelector("input").addEventListener("click", (e) => startGame(e));
+
+// after every 2s, clear arrow keys, "auto miss"
 
 function currentDate() {
   let currentDate = Date.now();
