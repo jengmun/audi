@@ -8,13 +8,13 @@ const scoreboard = {
   perfect: 0,
 };
 
-const accuracy = {
-  miss: ">1000",
-  bad: "<1000",
-  cool: "<600",
-  great: "<300",
-  perfect: "<100",
-};
+// const accuracy = {
+//   //   miss: ">1000",
+//   bad: playTime * 0.1,
+//   cool: playTime * 0.08,
+//   great: playTime * 0.05,
+//   perfect: playTime * 0.02,
+// };
 
 const keyCodes = {
   left: 37,
@@ -32,6 +32,7 @@ const keyCodes = {
 // };
 
 const uniCode = {
+  // keyCode : Unicode
   37: "&#8592",
   38: "&#8593",
   39: "&#8594",
@@ -60,99 +61,209 @@ const multiplier = {
   //   chain: 2 ** num,
 };
 
+let bpm = 120;
+const playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
+const roundTime = playTime * 2; // time taken for each round from level 6 onwards
 let level = 1;
 let score = 0;
 let currentKeys = [];
 let grade = "";
-let startDate = "startdate";
-let perfectTime = startDate + 4000;
-let distanceX = 0;
-let pressDate = 0;
-let bpm = 120;
-const playTime = (4 / bpm) * 60; // time taken for every 4 beats
-const roundTime = playTime * 2; // time taken for each round
+let startTimeRound;
+let startTimeGrading = 0;
+let perfectTime = startTimeGrading + playTime;
+let pressTime = 0;
+let numOfMoves = 0;
 
 // score = multiplier.grade * scoring.level;
 
 function randomiseKeys(level) {
+  document.querySelector(".arrow-keys").innerHTML = "";
   for (let i = 1; i <= level; i++) {
     const keyCode = Math.floor(Math.random() * 4) + 37;
 
     const newArrowKey = document.createElement("div");
-    newArrowKey.setAttribute("value", keyCode);
+    newArrowKey.setAttribute("id", keyCode);
     newArrowKey.className = "key";
     newArrowKey.innerHTML = uniCode[keyCode];
 
-    document.querySelector(".arrow-keys").append(newArrowKey);
-    currentKeys.push(newArrowKey);
+    numOfMoves++;
+
+    function displayKeys() {
+      document.querySelector(".arrow-keys").append(newArrowKey);
+      currentKeys.push(newArrowKey);
+      console.log("push keys");
+    }
+
+    // displayKeys();
+
+    if (level >= 6.25) {
+      console.log("level >6.25");
+      setTimeout(displayKeys, playTime);
+      //   setTimeout(currentDate, playTime);
+    } else {
+      console.log("display");
+      console.log(level);
+      displayKeys();
+      //   currentDate();
+    }
   }
 }
 
-function increaseStartDate() {
-  startDate += 4000;
-  console.log(`start date = ${startDate}`);
-  perfectTime = startDate + 4000;
-  console.log(perfectTime);
+// use pressDate - start date to calculate the accuracy of the timing of key pressed
+// upon pressing of spacebar:
+window.addEventListener("keydown", (e) => {
+  pressTime = Date.now();
+
+  if (e.keyCode === 32) {
+    console.log("key");
+    grading();
+    // if (!document.querySelector(".key")) {
+    //   if (grading() !== "miss") {
+    //     // console.log("success!");
+    //   }
+    // } else {
+    //   console.log("miss");
+    //   console.log(Date.now());
+    //   document.querySelector(".grade").innerText = "miss";
+    //   console.log(pressDate - perfectTime);
+    // }
+    // console.log(document.querySelector(".key"));
+
+    console.log(grade);
+    grade = "";
+    console.log(grade);
+  }
+});
+
+// if no spacebar pressed, clear arrow keys, "auto miss"
+function defaultMissLoop() {
+  if (level <= 6) {
+    setTimeout(defaultMiss, playTime);
+    setTimeout(defaultMissLoop, playTime);
+    console.log(`LEVEL 6`);
+    console.log(level);
+    // console.log(Date.now());
+  } else if (level > 5) {
+    console.log(`LEVEL7`);
+    setTimeout(defaultMiss, roundTime);
+    setTimeout(defaultMissLoop, roundTime);
+  }
+}
+
+function defaultMiss() {
+  pressTime = Date.now(); // 0.1x after playTime ends
+
+  //   pressDate = currentDate;
+
+  //   startDate = pressDate; // update startDate to startDate += playTime
+  // document.querySelector(".grade").innerText = grading();
+  grading();
+  // nextLevel();
+
+  console.log("remove");
+  grade = "";
+  console.log("miss");
+}
+
+// function increaseStartDate() {
+//   startDate += 4000;
+//   console.log(`start date = ${startDate}`);
+//   perfectTime = startDate + 4000;
+//   console.log(perfectTime);
+// }
+
+function nextLevel() {
+  if (level < 6) {
+    level++;
+    console.log(level);
+  } else if (level < 9.75) {
+    level += 0.25;
+    console.log(level);
+  } else if (level === 9.75) {
+    level = 6;
+  }
+  document.querySelector(".level-number").innerText = Math.floor(level);
+  console.log("next level");
+  randomiseKeys(Math.floor(level));
 }
 
 function grading() {
   //   const perfectDistance = 116;
   //   let deviation = Math.abs(perfectDistance - distanceX);
 
-  const deviation = Math.abs(pressDate - perfectTime);
+  if (level < 6) {
+    startTimeGrading = startTimeGrading + playTime;
+  } else {
+    startTimeGrading = startTimeGrading + roundTime;
+  }
 
-  if (deviation < 100) {
+  perfectTime = startTimeGrading + playTime;
+
+  const deviation = Math.abs(pressTime - perfectTime);
+  console.log(pressTime);
+  console.log(perfectTime);
+  console.log(deviation);
+  if (deviation < playTime * 0.02) {
     grade = "perfect";
     // console.log("perfect");
-  } else if (deviation < 300) {
+  } else if (deviation < playTime * 0.05) {
     grade = "great";
     // console.log("great");
-  } else if (deviation < 600) {
+  } else if (deviation < playTime * 0.08) {
     grade = "cool";
     // console.log("cool");
-  } else if (deviation < 1000) {
+  } else if (deviation < playTime * 0.1) {
     grade = "bad";
     // console.log("bad");
   } else {
     // alert("miss");
     grade = "miss";
   }
-  console.log(deviation);
-  console.log(`this is my ${grade}`);
-  scoreboard[grade] += 1;
+  console.log(grade);
+
+  console.log(document.querySelector(".key"));
+  if (!document.querySelector(".key")) {
+    console.log("all keys pressed");
+    scoreboard[grade] += 1;
+  } else {
+    console.log("here");
+    grade = "miss";
+  }
+  document.querySelector(".grade").innerText = grade;
+  document.querySelector(".arrow-keys").innerHTML = "";
+  // nextLevel();
+
   return grade;
 }
 
-function initialise() {
-  level = 8;
-  randomiseKeys(level);
-}
+// function initialise() {
+//   level = 1;
+//   randomiseKeys(level);
+// }
 
-function nextLevel() {
-  if (level < 6) {
-    level++;
-  } else if (level < 9.75) {
-    level += 0.25;
-  } else if (level === 9.75) {
-    level = 6;
-  }
-  document.querySelector(".level-number").innerText = Math.floor(level);
-  randomiseKeys(Math.floor(level));
-}
+// let last = 0;
+let distanceX = 0;
+function speedPerRound() {
+  // const now = performance.now();
+  // const difference = now - last || 0;
 
-function rhythmSpeed() {
-  document.querySelector(".target").style.transform = `translateX(${
-    distanceX + 1
-  }px)`;
-  //   console.log(`translateX(${distanceX + 1}px)`);
-  distanceX += 1;
+  // last = now;
+  // console.log(difference);
+
+  // distanceX += 0.0905 / (1000 / difference);
+
+  document.querySelector(
+    ".target"
+  ).style.transform = `translateX(${distanceX}px)`;
+
   if (distanceX === 185) {
     distanceX = 0;
   }
-  //   grading();
-}
 
-// setInterval(rhythmSpeed, 10);
+  // requestAnimationFrame(speedPerRound);
+
+  distanceX++;
+}
 
 window.addEventListener("keydown", (e) => {
   //   for (let i = 0; i < currentKeys.length; i++) {
@@ -169,37 +280,16 @@ window.addEventListener("keydown", (e) => {
     //   if (currentKey === null) {
     //     document.querySelector(".arrow-keys").innerHTML = "";
     //   }
-    if (e.keyCode == currentKey.value) {
+    if (e.keyCode == currentKey.id) {
       console.log("proceed to next key");
       currentKey.className = "pressed-key";
     } else {
       console.log("current round failed");
+      console.log(e.keyCode);
+      console.log(currentKey.id);
       currentKeys = [];
-      document.querySelector(".arrow-keys").innerHTML = "";
+      // document.querySelector(".arrow-keys").innerHTML = "";
     }
-  }
-});
-
-// use pressDate - start date to calculate the accuracy of the timing of key pressed
-
-window.addEventListener("keydown", (e) => {
-  pressDate = Date.now();
-
-  if (e.keyCode === 32) {
-    if (!document.querySelector(".key")) {
-      console.log(document.querySelector(".key"));
-      if (grading() !== "miss") {
-        console.log("success!");
-        document.querySelector(".grade").innerText = grading();
-      }
-    } else {
-      console.log("miss");
-      console.log(Date.now());
-      document.querySelector(".grade").innerText = "miss";
-      console.log(pressDate - perfectTime);
-    }
-    console.log(document.querySelector(".key"));
-    document.querySelector(".arrow-keys").innerHTML = "";
   }
 });
 
@@ -208,35 +298,32 @@ window.addEventListener("keydown", (e) => {
 // console.log(document.querySelector(".rhythm-bar").style.width);
 
 // timestamp;
-// 4s
-randomiseKeys(5);
+
 console.log(document.querySelector(".key"));
 console.log(currentKeys);
 // console.log(Date.now());
 
 function startGame(e) {
-  setInterval(rhythmSpeed, 10);
-  setInterval(nextLevel, 4000);
-  setInterval(randomiseKeys, 4000);
-  setInterval(increaseStartDate, 4000);
+  randomiseKeys(1);
+  // speedPerRound();
+  setInterval(speedPerRound, playTime / 185);
+  console.log(playTime / 185);
+  //   setInterval(currentDate, 2000);
+  setTimeout(setInterval(nextLevel, playTime), playTime * 1.2);
+  //   setInterval(randomiseKeys, 2000);
+  //   setInterval(increaseStartDate, 2000);
+  // setTimeout(defaultMissLoop(), playTime * 1.1);
 
-  startDate = Date.now();
-  perfectTime = startDate + 4000;
-  console.log(startDate);
+  startTimeGrading = Date.now();
+  startTimeRound = Date.now();
+  perfectTime = startTimeGrading + playTime;
+  //   console.log(startDate);
   console.log(e.target);
   e.target.remove();
 }
 
-document.querySelector("input").addEventListener("click", (e) => startGame(e));
-
-// after every 2s, clear arrow keys, "auto miss"
-
-function currentDate() {
-  let currentDate = Date.now();
-  if (currentDate - startDate > 2000) {
-    document.querySelector(".arrow-keys").innerHTML = "";
-    startDate = currentDate;
-  }
-}
+document.querySelector("button").addEventListener("click", (e) => startGame(e));
 
 // setInterval(currentDate, 2000);
+
+// remove event listener for spacebar before notes appear
