@@ -54,34 +54,26 @@ let level = 1;
 let score = 0;
 let currentKeys = [];
 let grade = "";
-let startTimeRound;
-let startTimeGrading = 0;
-let perfectTime = startTimeGrading + playTime;
+let chainMultiple = 0;
 let pressTime = 0;
-let numOfMoves = 0;
-
-// score = multiplier.grade * scoring.level;
+let currentRound = 0;
+let duration = 30 * 1000; // in ms
 
 function grading() {
   console.log("in grading");
-  // if (level <= 6) {
 
-  // }
-  // } else {
-  //   startTimeGrading = startTimeGrading + roundTime;
-  // }
+  const perfectBeat = (rhythmBarWidth * 3) / 4;
 
-  const deviation = Math.abs(pressTime - perfectTime);
-  console.log(`pressTime = ${pressTime}`);
+  const deviation = Math.abs(pressTime - perfectBeat);
   console.log(`deviation = ${deviation}`);
 
-  if (deviation < playTime * 0.02) {
+  if (deviation < rhythmBarWidth * 0.005) {
     grade = "perfect";
-  } else if (deviation < playTime * 0.05) {
+  } else if (deviation < rhythmBarWidth * 0.05) {
     grade = "great";
-  } else if (deviation < playTime * 0.08) {
+  } else if (deviation < rhythmBarWidth * 0.08) {
     grade = "cool";
-  } else if (deviation < playTime * 0.8) {
+  } else if (deviation < rhythmBarWidth * 0.1) {
     grade = "bad";
   } else {
     grade = "miss";
@@ -95,16 +87,11 @@ function grading() {
     grade = "miss";
   }
   document.querySelector(".grade").innerText = grade;
+  score += multiplier[grade] * scoring[Math.floor(level)];
+  console.log(grade);
+  document.querySelector(".score").innerText = score;
 
   // setTimeout((document.querySelector(".grade").innerText = ""), playTime / 4);
-}
-
-function determinePerfectTime() {
-  startTimeGrading += playTime;
-  console.log(`startTimeGrading = ${startTimeGrading}`);
-  console.log(playTime);
-  perfectTime = startTimeGrading + playTime;
-  console.log(`perfectTime = ${perfectTime}`);
 }
 
 function nextLevel() {
@@ -125,15 +112,15 @@ function nextLevel() {
 
 function randomiseKeys(level) {
   document.querySelector(".arrow-keys").innerHTML = "";
+  currentRound++;
   for (let i = 1; i <= level; i++) {
     const keyCode = Math.floor(Math.random() * 4) + 37;
 
     const newArrowKey = document.createElement("div");
     newArrowKey.setAttribute("id", keyCode);
     newArrowKey.className = "key";
+    newArrowKey.classList.add(`${currentRound}`);
     newArrowKey.innerHTML = uniCode[keyCode];
-
-    numOfMoves++;
 
     function displayKeys() {
       document.querySelector(".arrow-keys").append(newArrowKey);
@@ -159,23 +146,11 @@ function randomiseKeys(level) {
 function defaultMiss() {
   if (document.querySelector(".key")) {
     console.log("in default miss");
-    pressTime = Date.now(); // 0.1x after playTime ends
+    pressTime = distanceX; // 0.1x after playTime ends
     console.log(pressTime);
     grading();
     // nextLevel();
   }
-}
-
-function defaultMissLoop() {
-  // if (level <= 6) {
-  console.log("in default miss loop lvl 6");
-  defaultMiss();
-  setTimeout(defaultMissLoop, playTime);
-  // } else if (level > 6) {
-  //   console.log("in default miss loop lvl 7");
-  //   defaultMiss();
-  //   setTimeout(defaultMissLoop, playTime);
-  // }
 }
 
 window.addEventListener("keydown", (e) => {
@@ -195,8 +170,7 @@ window.addEventListener("keydown", (e) => {
 // upon pressing of spacebar:
 window.addEventListener("keydown", (e) => {
   if (e.keyCode === 32) {
-    pressTime = Date.now();
-    console.log(`currentTime = ${Date.now()}`);
+    pressTime = distanceX;
     grading();
     document.querySelector(".arrow-keys").innerHTML = "";
   }
@@ -214,7 +188,11 @@ function speedPerRound() {
 
   lastUpdate = now;
 
-  distanceX += (185 / numOfFrames) * delta;
+  const distancePerFrame = (rhythmBarWidth - targetWidth) / numOfFrames;
+  const framesToNextLevel = rhythmBarWidth * 0.85;
+  const minNumOfFrames = Math.ceil(framesToNextLevel / distancePerFrame);
+
+  distanceX += distancePerFrame * delta;
 
   if (distanceX >= 185) {
     distanceX = 0;
@@ -224,32 +202,56 @@ function speedPerRound() {
     ".target"
   ).style.transform = `translateX(${distanceX}px)`;
 
+  if (
+    distanceX > minNumOfFrames * distancePerFrame &&
+    distanceX < (minNumOfFrames + 1) * distancePerFrame
+  ) {
+    if (
+      document.querySelector(".key") &&
+      document.querySelector(".key").classList.contains(currentRound)
+    ) {
+      console.log(document.querySelector(".key").className);
+      defaultMiss();
+    }
+    nextLevel();
+  }
+
+  // console.log(distanceX);
+  // console.log(minNumOfFrames * distancePerFrame);
+  // console.log((minNumOfFrames + 1) * distancePerFrame);
+
+  // if (
+  //   distanceX > minNumOfFrames * distancePerFrame &&
+  //   distanceX < (minNumOfFrames + 1) * distancePerFrame &&
+  //   !document.querySelector(".key")
+  // ) {
+  //   nextLevel();
+  // }
   requestAnimationFrame(speedPerRound);
 }
 
 // console.log(document.querySelector(".rhythm-bar").style.width);
 let startTime = 0;
-const endTime = startTime + 30000; // song duraction
+const endTime = startTime + duration; // song duraction
 let remainingTime = endTime - startTime;
 
-async function startGame(e) {
-  startTimeGrading = Date.now();
-  startTimeRound = Date.now();
+function startGame(e) {
   startTime = Date.now();
-
+  setInterval(timer, 1000);
   randomiseKeys(1);
   // setInterval(speedPerRound, playTime / 185);
-  setTimeout(defaultMissLoop, playTime * 1.1);
+  // defaultMissLoop();
+  // setTimeout(defaultMissLoop, playTime * 1.1);
   // setTimeout(setInterval(nextLevel, playTime * 1.5), playTime * 1.1);
-  setInterval(timer, 1000);
+
   console.log("promise ended");
 
   lastUpdate = getTime();
   requestAnimationFrame(speedPerRound);
-  setInterval(determinePerfectTime, playTime);
+  // setInterval(determinePerfectTime, playTime);
 
   document.querySelector(".timer").innerText = 30;
-  // perfectTime = startTimeGrading + playTime;
+
   //   console.log(startDate);
   // console.log(e.target);
   e.target.remove();

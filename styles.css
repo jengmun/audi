@@ -66,12 +66,20 @@ body {
 }
 
 .target-area {
-  background-color: lightgreen;
-  opacity: 0.5;
-  width: 46px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.3),
+    #5ec7c3,
+    white,
+    white,
+    #5ec7c3,
+    rgba(0, 0, 0, 0.3)
+  );
+  opacity: 1;
+  width: 40px;
   height: 15px;
   position: absolute;
-  right: 53.5px;
+  right: 30px;
 }
 
 .arrow-keys {
