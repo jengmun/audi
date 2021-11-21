@@ -65,6 +65,21 @@ body {
   height: 14px;
 }
 
+.target-move {
+  z-index: 1;
+  left: var(--x, 0px);
+  animation: move 2s linear infinite;
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(0vw);
+  }
+  100% {
+    transform: translateX(calc(185px - var(--x, 0px)));
+  }
+}
+
 .target-area {
   background-image: linear-gradient(
     to right,
