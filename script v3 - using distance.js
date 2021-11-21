@@ -80,6 +80,7 @@ function grading() {
   }
 
   if (!document.querySelector(".key")) {
+    console.log(document.querySelector(".key"));
     console.log("all keys pressed");
     scoreboard[grade] += 1;
   } else {
@@ -131,6 +132,16 @@ function randomiseKeys(level) {
 
     displayKeys();
 
+    window.addEventListener("keydown", function spacebar(e) {
+      if (e.keyCode === 32) {
+        console.log(Date.now());
+        pressTime = position;
+        grading();
+        document.querySelector(".arrow-keys").innerHTML = "";
+        window.removeEventListener("keydown", spacebar);
+      }
+    });
+
     // if (level >= 6.25) {
     //   console.log("level >6.25");
     //   setTimeout(displayKeys, playTime);
@@ -170,12 +181,14 @@ window.addEventListener("keydown", (e) => {
 });
 
 // upon pressing of spacebar:
-window.addEventListener("keydown", (e) => {
+
+window.addEventListener("keydown", function spacebar(e) {
   if (e.keyCode === 32) {
     console.log(Date.now());
     pressTime = position;
     grading();
     document.querySelector(".arrow-keys").innerHTML = "";
+    window.removeEventListener("keydown", spacebar);
   }
 });
 
@@ -235,10 +248,11 @@ function startGame(e) {
   missTime = startTime + playTime * 0.85;
   setInterval(timer, 1000);
   randomiseKeys(1);
-
+  element.classList.add("target-move");
+  window.requestAnimationFrame(getPosition);
   // setInterval(speedPerRound, playTime / 185);
-  setInterval(defaultMiss, playTime);
-  setInterval(nextLevel, playTime);
+  setTimeout(setInterval(defaultMiss, playTime), playTime * 0.85);
+  setTimeout(setInterval(nextLevel, playTime), playTime * 0.85);
   // setTimeout(defaultMissLoop, playTime * 1.1);
   // setTimeout(setInterval(nextLevel, playTime * 1.5), playTime * 1.1);
 
@@ -274,7 +288,7 @@ function timer() {
 
 let moving = false;
 const element = document.querySelector(".target");
-element.classList.add("target-move");
+
 element.addEventListener("transitionend", function () {
   moving = true;
 });
@@ -288,7 +302,7 @@ function getPosition() {
     window.requestAnimationFrame(getPosition);
   }
 }
-window.requestAnimationFrame(getPosition);
+
 element.getBoundingClientRect().left;
 console.log(element.getBoundingClientRect().right);
 // 351.8214416503906
