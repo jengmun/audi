@@ -57,7 +57,7 @@ let grade = "";
 let chainMultiple = 0;
 let pressTime = 0;
 let currentRound = 0;
-let duration = 10 * 1000; // in ms
+let duration = 300 * 1000; // in ms
 let startpos = 0;
 let currentPosition = 0;
 
@@ -216,7 +216,7 @@ function startGame(e) {
 
   document.querySelector(".timer").innerText = duration / 1000;
 
-  // playAudio();
+  playAudio();
 
   e.target.remove();
 
@@ -242,6 +242,26 @@ function startGame(e) {
 document.querySelector("button").addEventListener("click", (e) => startGame(e));
 
 function displayScoreboard() {
+  // insert table structure
+
+  document.querySelector(".timer").insertAdjacentHTML(
+    "afterend",
+    `<div id="scoreboard-div">
+  <table class="scoreboard">
+    <tr id="header-row">
+      <th>Score</th>
+      <th>Perfect</th>
+      <th>Great</th>
+      <th>Cool</th>
+      <th>Bad</th>
+      <th>Miss</th>
+    </tr>
+  </table>
+</div>`
+  );
+
+  // insert variables
+
   const row = document.createElement("tr");
   row.id = "data-row";
   const scoring = document.createElement("td");
@@ -265,5 +285,9 @@ function displayScoreboard() {
 }
 
 function playAudio() {
-  document.querySelector("audio").play();
+  const audio = document.querySelector("audio");
+  console.log(audio.readyState);
+  if (audio.readyState >= 2) {
+    audio.play();
+  }
 }
