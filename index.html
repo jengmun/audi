@@ -15,9 +15,15 @@
     />
   </head>
   <body>
-    <div class="home-page"><button id="start-button">start</button></div>
+    <div class="home-page">
+      <button id="start-button">start</button>
+      <!-- <label for="song-list">Choose a song</label>
+      <select name="song-list">
+        <option value="beat city">Audition - Beat City (120bpm)</option>
+      </select> -->
+    </div>
     <div class="game-container">
-      <div class="grade">Great</div>
+      <div class="grade"></div>
       <div class="upper-container">
         <div class="level">Level <span class="level-number">1</span></div>
         <div class="rhythm-bar">
@@ -30,7 +36,25 @@
     <div class="score">score</div>
     <div class="timer">timer</div>
 
-    <div class="ending-page"></div>
+    <div id="scoreboard-div">
+      <table class="scoreboard">
+        <tr id="header-row">
+          <th>Score</th>
+          <th>Perfect</th>
+          <th>Great</th>
+          <th>Cool</th>
+          <th>Bad</th>
+          <th>Miss</th>
+        </tr>
+      </table>
+    </div>
+
+    <audio preload="none">
+      <source src="/Audition - Beat City.mp3" type="audio/mp3" />
+    </audio>
+    <div class="ending-page">
+      <button id="retry">retry</button>
+    </div>
     <script src="script v3 - using distance.js"></script>
   </body>
 </html>
