@@ -172,19 +172,27 @@ body {
   bottom: 30vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: lightblue;
+  font-size: 2vw;
+  padding-right: 10px;
 }
 
 .timer {
   width: 10vw;
   height: 2vw;
-  border: 1px black solid;
+  border: 2px #45008c solid;
+  border-radius: 10px;
+  background-image: linear-gradient(to bottom, #45008c, #c9b2e0, #45008c);
   position: absolute;
   left: 1vw;
   bottom: 3vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  flex-direction: column;
 }
 
 table,

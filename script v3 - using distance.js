@@ -57,7 +57,7 @@ let grade = "";
 let chainMultiple = 0;
 let pressTime = 0;
 let currentRound = 0;
-let duration = 300 * 1000; // in ms
+let duration = 10 * 1000; // in ms
 let startpos = 0;
 let currentPosition = 0;
 
@@ -180,6 +180,7 @@ window.addEventListener("keydown", (e) => {
       currentKeys = [];
       grading();
       document.querySelector(".arrow-keys").innerHTML = "";
+      window.removeEventListener("keydown", spacebar);
     }
   }
 });
@@ -216,8 +217,6 @@ function startGame(e) {
 
   document.querySelector(".timer").innerText = duration / 1000;
 
-  playAudio();
-
   e.target.remove();
 
   function timer() {
@@ -239,7 +238,7 @@ function startGame(e) {
   }
 }
 
-document.querySelector("button").addEventListener("click", (e) => startGame(e));
+document.querySelector("button").addEventListener("click", (e) => playAudio(e));
 
 function displayScoreboard() {
   // insert table structure
@@ -289,5 +288,6 @@ function playAudio() {
   console.log(audio.readyState);
   if (audio.readyState >= 2) {
     audio.play();
+    setTimeout(startGame, 3200);
   }
 }
