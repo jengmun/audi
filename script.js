@@ -33,6 +33,7 @@ const scoring = {
   7: 6000,
   8: 7000,
   9: 8000,
+  9.8: 10000,
 };
 
 const multiplier = {
@@ -47,7 +48,7 @@ const multiplier = {
 const songs = {
   "beat-city": {
     bpm: 120,
-    duration: 5 * 1000,
+    duration: 250 * 1000,
     delay: 3190,
   },
 
@@ -118,7 +119,7 @@ function grading() {
     grade = "great";
   } else if (deviation < rhythmBarWidth * 0.1) {
     grade = "cool";
-  } else if (deviation < rhythmBarWidth * 0.2) {
+  } else if (deviation < rhythmBarWidth * 0.15) {
     grade = "bad";
   } else {
     grade = "miss";
@@ -133,6 +134,7 @@ function grading() {
 
   const gradeDOM = document.querySelector(".grade");
   gradeDOM.innerText = grade;
+  gradeDOM.id = grade;
   gradeDOM.style.animation = `fadeoutgrade ${playTime / 2000}s 1 forwards`;
   setTimeout(function () {
     gradeDOM.style.animation = "";
@@ -149,16 +151,35 @@ function grading() {
 function nextLevel() {
   if (level < 6) {
     level++;
-  } else if (level < 9.75) {
+  } else if (level < 9) {
     level += 0.25;
-  } else if (level === 9.75) {
+  } else if (level < 9.8) {
+    level += 0.2;
+    level = Math.round(level * 10) / 10;
+  } else if (level === 9.8) {
     level = 6;
   }
-  document.querySelector(".level-number").innerText = Math.floor(level);
+
+  const levelLabel = document.querySelector("#level-label");
+  const levelNumber = document.querySelector(".level-number");
+
+  if (level < 9.8) {
+    levelNumber.removeAttribute("id", "finish-move");
+    levelLabel.innerText = `Level `;
+    levelNumber.innerText = Math.floor(level);
+  }
+
+  if (level === 9.8) {
+    levelLabel.innerText = "";
+    levelNumber.innerText = "FINISH MOVE!";
+    levelNumber.id = "finish-move";
+  }
+
   randomiseKeys(Math.floor(level));
 }
 
 function randomiseKeys(level) {
+  currentKeys = [];
   document.querySelector(".arrow-keys").innerHTML = "";
   currentRound++;
   for (let i = 1; i <= level; i++) {
@@ -180,8 +201,6 @@ function randomiseKeys(level) {
     window.addEventListener("keydown", spacebar);
   }
 }
-
-// if no spacebar pressed, clear arrow keys, "auto miss"
 
 function defaultMiss() {
   if (document.querySelector(".key")) {
@@ -252,7 +271,6 @@ function startGame() {
 
 function displayScoreboard() {
   // insert table structure
-
   document.querySelector(".timer").insertAdjacentHTML(
     "afterend",
     `<div id="scoreboard-div">
@@ -270,7 +288,6 @@ function displayScoreboard() {
   );
 
   // insert variables
-
   const row = document.createElement("tr");
   row.id = "data-row";
   const scoring = document.createElement("td");
@@ -347,10 +364,9 @@ window.addEventListener("keydown", (e) => {
     if (e.keyCode == currentKey.id) {
       currentKey.className = "pressed-key";
     } else {
-      currentKeys = [];
-      grading();
-      document.querySelector(".arrow-keys").innerHTML = "";
-      window.removeEventListener("keydown", spacebar);
+      for (const key of currentKeys) {
+        key.className = "key";
+      }
     }
   }
 });
@@ -364,3 +380,5 @@ document.querySelector("#start-button").addEventListener("click", () => {
   songList();
   playAudio(songChosen);
 });
+
+function chance() {}

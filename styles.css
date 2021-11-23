@@ -34,6 +34,7 @@ body {
   font-size: 1.5vw;
   background-image: linear-gradient(to bottom, #c9b2e0, #45008c);
   color: white;
+  cursor: pointer;
 }
 
 select {
@@ -124,6 +125,12 @@ option {
   margin-left: 5px;
   font-size: 1.8vw;
   padding-left: 5px;
+}
+
+#finish-move {
+  font-family: "Road Rage", cursive;
+  font-size: 2vw;
+  color: rgb(0, 247, 255);
 }
 
 .rhythm-bar {
@@ -331,4 +338,25 @@ td {
   align-items: center;
   justify-content: center;
   animation: fadein 1s 1;
+  cursor: pointer;
+}
+
+#perfect {
+  color: rgb(247, 0, 255);
+}
+
+#great {
+  color: rgb(0, 255, 21);
+}
+
+#cool {
+  color: rgb(0, 255, 255);
+}
+
+#bad {
+  color: rgb(255, 0, 128);
+}
+
+#miss {
+  color: rgb(255, 0, 0);
 }
