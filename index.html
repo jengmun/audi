@@ -5,11 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AuditionSEA</title>
-    <link rel="icon" type="image/png" href="aud-icon-min.png" />
+    <link rel="icon" type="image/png" href="/images/aud-icon-min.png" />
     <link href="styles.css" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="screen-1">
@@ -18,8 +21,11 @@
         <select name="song-list">
           <option value="beat-city">Audition - Beat City (120bpm)</option>
           <option value="you">Audition - You (136bpm)</option>
-          <option value="flying-duck">Cherry Filter - Flying Duck(156bpm)</option>
+          <option value="flying-duck">
+            Cherry Filter - Flying Duck(156bpm)
+          </option>
           <option value="eve">Kaikai Kitan - Eve (185bpm)</option>
+          <option value="eight">IU - Eight (ft Suga) (120bpm)</option>
         </select>
       </div>
     </div>
@@ -39,14 +45,40 @@
       <div class="score">0</div>
       <div class="timer">0:00 <progress></progress></div>
 
-      <audio id="beat-city" preload="auto" src="/Audition - Beat City.mp3" type="audio/mp3"></audio>
-      <audio id="you" preload="auto" src="/Audition - You.mp3" type="audio/mp3"></audio>
-        <audio id="flying-duck" preload="auto" src="/Cherry Filter - Flying Duck.mp3" type="audio/mp3"></audio>
-        <audio id="eve" preload="auto" src="/Kaikai Kitan - Eve.mp3" type="audio/mp3"></audio>
+      <audio
+        id="beat-city"
+        preload="auto"
+        src="/soundtracks/Audition - Beat City.mp3"
+        type="audio/mp3"
+      ></audio>
+      <audio
+        id="you"
+        preload="auto"
+        src="/soundtracks/Audition - You.mp3"
+        type="audio/mp3"
+      ></audio>
+      <audio
+        id="flying-duck"
+        preload="auto"
+        src="/soundtracks/Cherry Filter - Flying Duck.mp3"
+        type="audio/mp3"
+      ></audio>
+      <audio
+        id="eve"
+        preload="auto"
+        src="/soundtracks/Kaikai Kitan - Eve.mp3"
+        type="audio/mp3"
+      ></audio>
+      <audio
+        id="eight"
+        preload="auto"
+        src="/soundtracks/IU - eight (ft Suga).mp3"
+        type="audio/mp3"
+      ></audio>
       <div class="ending-page">
         <button id="retry">retry</button>
       </div>
     </div>
-    <script src="script v3 - using distance.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
