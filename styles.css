@@ -51,13 +51,21 @@ option {
 }
 
 #screen-2 {
+  height: 100%;
+  background-color: black;
+  display: none;
+  justify-items: center;
+}
+
+#game-page {
   height: 100vh;
   width: 100vw;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   background-image: url("/images/AuTown.png");
-  background-size: cover;
+  background-size: 100% 100%;
+  background-position: center;
 }
 
 .game-container {
@@ -183,6 +191,21 @@ option {
   height: 1vw;
   position: absolute;
   right: 10%;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .arrow-keys {
@@ -211,6 +234,20 @@ option {
   font-size: 3vw;
 }
 
+.chance-key {
+  display: flex;
+  border-radius: 50%;
+  width: 3.5vw;
+  height: 3.5vw;
+  max-height: 4vw;
+  background-image: linear-gradient(to bottom, red, #ff4b4b);
+  margin: 1.5px;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 3vw;
+}
+
 .pressed-key {
   display: flex;
   border-radius: 50%;
@@ -222,6 +259,7 @@ option {
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: 3vw;
 }
 
 .score {
@@ -244,9 +282,10 @@ option {
 .timer {
   width: 10vw;
   height: 2vw;
-  border: 2px #45008c solid;
+  border: 2px white solid;
   border-radius: 10px;
-  background-image: linear-gradient(to bottom, #45008c, #c9b2e0, #45008c);
+  background-color: black;
+  opacity: 0.6;
   position: absolute;
   left: 1vw;
   bottom: 3vh;

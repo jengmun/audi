@@ -23,6 +23,13 @@ const uniCode = {
   40: "&#8595",
 };
 
+const chanceUniCode = {
+  37: "&#8594",
+  38: "&#8595",
+  39: "&#8592",
+  40: "&#8593",
+};
+
 const scoring = {
   1: 1000,
   2: 1500,
@@ -34,15 +41,6 @@ const scoring = {
   8: 7000,
   9: 8000,
   9.8: 10000,
-};
-
-const multiplier = {
-  miss: 0,
-  bad: 0.5,
-  cool: 1,
-  great: 1.5,
-  perfect: 2,
-  //   chain: 2 ** num,
 };
 
 const songs = {
@@ -86,8 +84,9 @@ let roundTime = playTime * 2; // time taken for each round from level 6 onwards
 let level = 1;
 let score = 0;
 let currentKeys = [];
+let currentKeysHTML = "";
+let chainMultiple = -1;
 let grade = "";
-let chainMultiple = 0;
 let pressTime = 0;
 let currentRound = 0;
 let duration = 0; // in ms
@@ -110,16 +109,16 @@ function grading() {
   console.log("in grading");
 
   const perfectBeat = startpos + rhythmBarWidth * 0.75;
-
   const deviation = Math.abs(pressTime - perfectBeat);
 
   if (deviation < rhythmBarWidth * 0.02) {
     grade = "perfect";
+    chainMultiple++;
   } else if (deviation < rhythmBarWidth * 0.05) {
     grade = "great";
   } else if (deviation < rhythmBarWidth * 0.1) {
     grade = "cool";
-  } else if (deviation < rhythmBarWidth * 0.15) {
+  } else if (deviation <= rhythmBarWidth * 0.14) {
     grade = "bad";
   } else {
     grade = "miss";
@@ -130,10 +129,27 @@ function grading() {
     grade = "miss";
   }
 
+  if (grade !== "perfect") {
+    chainMultiple = -1;
+  }
+
+  const multiplier = {
+    miss: 0,
+    bad: 0.5,
+    cool: 1,
+    great: 1.5,
+    perfect: 2 ** Math.max(1, chainMultiple + 1),
+  };
+
   scoreboard[grade] += 1;
 
   const gradeDOM = document.querySelector(".grade");
-  gradeDOM.innerText = grade;
+  if (grade === "perfect" && chainMultiple > 0) {
+    gradeDOM.innerText = `${grade} x${chainMultiple}`;
+  } else {
+    gradeDOM.innerText = grade;
+  }
+
   gradeDOM.id = grade;
   gradeDOM.style.animation = `fadeoutgrade ${playTime / 2000}s 1 forwards`;
   setTimeout(function () {
@@ -178,11 +194,11 @@ function nextLevel() {
   randomiseKeys(Math.floor(level));
 }
 
-function randomiseKeys(level) {
+function randomiseKeys(lvl) {
   currentKeys = [];
   document.querySelector(".arrow-keys").innerHTML = "";
   currentRound++;
-  for (let i = 1; i <= level; i++) {
+  for (let i = 1; i <= lvl; i++) {
     const keyCode = Math.floor(Math.random() * 4) + 37;
 
     const newArrowKey = document.createElement("div");
@@ -191,22 +207,34 @@ function randomiseKeys(level) {
     newArrowKey.classList.add(`${currentRound}`);
     newArrowKey.innerHTML = uniCode[keyCode];
 
-    function displayKeys() {
-      document.querySelector(".arrow-keys").append(newArrowKey);
-      currentKeys.push(newArrowKey);
-    }
+    // function displayKeys() {
+    document.querySelector(".arrow-keys").append(newArrowKey);
+    currentKeys.push(newArrowKey);
+    //   }
 
-    displayKeys();
-
-    window.addEventListener("keydown", spacebar);
+    //   displayKeys();
   }
+  window.addEventListener("keydown", spacebar);
+
+  if (level === 9.8) {
+    const chanceKey =
+      document.querySelector(".arrow-keys").childNodes[
+        Math.floor(Math.random() * Math.floor(level))
+      ];
+    console.log(document.querySelector(".arrow-keys"));
+    console.log(level);
+    console.log(chanceKey);
+    console.log(Math.floor(Math.random() * level));
+    chanceKey.classList.add("chance-key");
+    chanceKey.innerHTML = chanceUniCode[chanceKey.id];
+  }
+
+  currentKeysHTML = document.querySelector(".arrow-keys").innerHTML;
 }
 
 function defaultMiss() {
   if (document.querySelector(".key")) {
-    console.log("in default miss");
     pressTime = currentPosition; // 0.1x after playTime ends
-    console.log(pressTime);
     grading();
   }
 }
@@ -342,6 +370,7 @@ function initialise() {
   document.querySelector("#screen-2").style.display = "none";
   document.querySelector(".arrow-keys").innerHTML = "";
   document.querySelector("#retry").style.display = "none";
+  document.querySelector("#screen-2").style.animation = "";
 
   for (const grade in scoreboard) {
     scoreboard[grade] = 0;
@@ -364,9 +393,7 @@ window.addEventListener("keydown", (e) => {
     if (e.keyCode == currentKey.id) {
       currentKey.className = "pressed-key";
     } else {
-      for (const key of currentKeys) {
-        key.className = "key";
-      }
+      document.querySelector(".arrow-keys").innerHTML = currentKeysHTML;
     }
   }
 });
@@ -377,8 +404,28 @@ window.addEventListener("keydown", spacebar);
 document.querySelector("#start-button").addEventListener("click", () => {
   document.querySelector("#screen-1").style.display = "none";
   document.querySelector("#screen-2").style.display = "flex";
+  document.querySelector("#screen-2").style.animation = "fadein 1s 1";
   songList();
   playAudio(songChosen);
 });
 
-function chance() {}
+document.querySelector("#full-screen").addEventListener("click", fullScreen);
+
+function fullScreen() {
+  document.querySelector("body").requestFullscreen();
+}
+
+function chance3(e) {
+  if (e.keyCode === 46) {
+    for (let i = Math.floor(Math.random() * Math.floor(level)); ; ) {
+      let chanceKey = document.querySelector(".arrow-keys").childNodes[i];
+      chanceKey.classList.add("chance-key");
+      chanceKey.innerHTML = chanceUniCode[chanceKey.id];
+      if (document.getElementsByClassName(".chance-key")[2] !== undefined) {
+        return;
+      }
+    }
+  }
+}
+
+window.addEventListener("keydown", chance3);

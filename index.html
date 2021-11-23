@@ -27,59 +27,62 @@
           <option value="eve">Kaikai Kitan - Eve (185bpm)</option>
           <option value="eight">IU - Eight (ft Suga) (120bpm)</option>
         </select>
+        <button id="full-screen">full screen</button>
       </div>
     </div>
 
     <div id="screen-2">
-      <div class="game-container">
-        <div class="grade"></div>
-        <div class="upper-container">
-          <div class="level">
-            <span id="level-label">Level </span
-            ><span class="level-number">1</span>
+      <div id="game-page">
+        <div class="game-container">
+          <div class="grade"></div>
+          <div class="upper-container">
+            <div class="level">
+              <span id="level-label">Level </span
+              ><span class="level-number">1</span>
+            </div>
+            <div class="rhythm-bar">
+              <div class="target-area"></div>
+              <div class="target"></div>
+            </div>
           </div>
-          <div class="rhythm-bar">
-            <div class="target-area"></div>
-            <div class="target"></div>
-          </div>
+          <div class="arrow-keys"></div>
         </div>
-        <div class="arrow-keys"></div>
-      </div>
-      <div class="score">0</div>
-      <div class="timer">0:00 <progress></progress></div>
+        <div class="score">0</div>
+        <div class="timer">0:00 <progress></progress></div>
 
-      <audio
-        id="beat-city"
-        preload="auto"
-        src="/soundtracks/Audition - Beat City.mp3"
-        type="audio/mp3"
-      ></audio>
-      <audio
-        id="you"
-        preload="auto"
-        src="/soundtracks/Audition - You.mp3"
-        type="audio/mp3"
-      ></audio>
-      <audio
-        id="flying-duck"
-        preload="auto"
-        src="/soundtracks/Cherry Filter - Flying Duck.mp3"
-        type="audio/mp3"
-      ></audio>
-      <audio
-        id="eve"
-        preload="auto"
-        src="/soundtracks/Kaikai Kitan - Eve.mp3"
-        type="audio/mp3"
-      ></audio>
-      <audio
-        id="eight"
-        preload="auto"
-        src="/soundtracks/IU - eight (ft Suga).mp3"
-        type="audio/mp3"
-      ></audio>
-      <div class="ending-page">
-        <button id="retry">retry</button>
+        <audio
+          id="beat-city"
+          preload="auto"
+          src="/soundtracks/Audition - Beat City.mp3"
+          type="audio/mp3"
+        ></audio>
+        <audio
+          id="you"
+          preload="auto"
+          src="/soundtracks/Audition - You.mp3"
+          type="audio/mp3"
+        ></audio>
+        <audio
+          id="flying-duck"
+          preload="auto"
+          src="/soundtracks/Cherry Filter - Flying Duck.mp3"
+          type="audio/mp3"
+        ></audio>
+        <audio
+          id="eve"
+          preload="auto"
+          src="/soundtracks/Kaikai Kitan - Eve.mp3"
+          type="audio/mp3"
+        ></audio>
+        <audio
+          id="eight"
+          preload="auto"
+          src="/soundtracks/IU - eight (ft Suga).mp3"
+          type="audio/mp3"
+        ></audio>
+        <div class="ending-page">
+          <button id="retry">retry</button>
+        </div>
       </div>
     </div>
     <script src="script.js"></script>
