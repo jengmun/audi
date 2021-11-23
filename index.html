@@ -7,34 +7,45 @@
     <title>AuditionSEA</title>
     <link rel="icon" type="image/png" href="aud-icon-min.png" />
     <link href="styles.css" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&display=swap" rel="stylesheet">
   </head>
   <body>
-    <button id="start-button">&#9658; start</button>
-    <div class="game-container">
-      <div class="grade"></div>
-      <div class="upper-container">
-        <div class="level">Level <span class="level-number">1</span></div>
-        <div class="rhythm-bar">
-          <div class="target-area"></div>
-          <div class="target"></div>
-        </div>
+    <div id="screen-1">
+      <div class="home-page">
+        <button id="start-button">&#9658; start</button>
+        <select name="song-list">
+          <option value="beat-city">Audition - Beat City (120bpm)</option>
+          <option value="you">Audition - You (136bpm)</option>
+          <option value="flying-duck">Cherry Filter - Flying Duck(156bpm)</option>
+          <option value="eve">Kaikai Kitan - Eve (185bpm)</option>
+        </select>
       </div>
-      <div class="arrow-keys"></div>
     </div>
-    <div class="score">0</div>
-    <div class="timer">3:00 <progress></progress></div>
 
-    <audio preload="auto">
-      <source src="/Audition - Beat City.mp3" type="audio/mp3" />
-    </audio>
-    <div class="ending-page">
-      <button id="retry">retry</button>
+    <div id="screen-2">
+      <div class="game-container">
+        <div class="grade"></div>
+        <div class="upper-container">
+          <div class="level">Level <span class="level-number">1</span></div>
+          <div class="rhythm-bar">
+            <div class="target-area"></div>
+            <div class="target"></div>
+          </div>
+        </div>
+        <div class="arrow-keys"></div>
+      </div>
+      <div class="score">0</div>
+      <div class="timer">0:00 <progress></progress></div>
+
+      <audio id="beat-city" preload="auto" src="/Audition - Beat City.mp3" type="audio/mp3"></audio>
+      <audio id="you" preload="auto" src="/Audition - You.mp3" type="audio/mp3"></audio>
+        <audio id="flying-duck" preload="auto" src="/Cherry Filter - Flying Duck.mp3" type="audio/mp3"></audio>
+        <audio id="eve" preload="auto" src="/Kaikai Kitan - Eve.mp3" type="audio/mp3"></audio>
+      <div class="ending-page">
+        <button id="retry">retry</button>
+      </div>
     </div>
     <script src="script v3 - using distance.js"></script>
   </body>

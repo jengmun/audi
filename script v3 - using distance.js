@@ -44,12 +44,45 @@ const multiplier = {
   //   chain: 2 ** num,
 };
 
-const rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
+const songs = {
+  "beat-city": {
+    bpm: 120,
+    duration: 5 * 1000,
+    delay: 3190,
+  },
+
+  you: {
+    bpm: 136,
+    duration: 250 * 1000,
+    delay: 3350,
+  },
+
+  "flying-duck": {
+    bpm: 156,
+    duration: 240 * 1000,
+    delay: 1538,
+  },
+
+  eve: {
+    bpm: 185,
+    duration: 219 * 1000,
+    delay: 1220,
+  },
+
+  // "goodbye-my-love" :{
+  //   bpm:87,
+  //   duration:
+  //   delay: 0
+  // }
+  // }
+};
+
+let rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
 const targetWidth = document.querySelector(".target").offsetWidth;
 
-let bpm = 120;
-const playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
-const roundTime = playTime * 2; // time taken for each round from level 6 onwards
+let bpm = 200;
+let playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
+let roundTime = playTime * 2; // time taken for each round from level 6 onwards
 let level = 1;
 let score = 0;
 let currentKeys = [];
@@ -57,7 +90,7 @@ let grade = "";
 let chainMultiple = 0;
 let pressTime = 0;
 let currentRound = 0;
-let duration = 10 * 1000; // in ms
+let duration = 0; // in ms
 let startpos = 0;
 let currentPosition = 0;
 
@@ -72,17 +105,18 @@ function getPosition() {
 let missPoint = startpos + rhythmBarWidth * 0.9;
 
 function grading() {
+  rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
   console.log("in grading");
 
   const perfectBeat = startpos + rhythmBarWidth * 0.75;
-  // console.log(perfectBeat);
-  // console.log(pressTime);
-  // console.log(startpos);
-  // console.log(rhythmBarWidth * 0.75);
+  console.log(perfectBeat);
+  console.log(pressTime);
+  console.log(startpos);
+  console.log(rhythmBarWidth * 0.75);
   const deviation = Math.abs(pressTime - perfectBeat);
   console.log(`deviation = ${deviation}`);
 
-  if (deviation < rhythmBarWidth * 0.005) {
+  if (deviation < rhythmBarWidth * 0.01) {
     grade = "perfect";
   } else if (deviation < rhythmBarWidth * 0.05) {
     grade = "great";
@@ -97,12 +131,13 @@ function grading() {
   if (!document.querySelector(".key")) {
     console.log(document.querySelector(".key"));
     console.log("all keys pressed");
-    scoreboard[grade] += 1;
   } else {
     console.log("keys not pressed");
     console.log(document.querySelector(".key"));
     grade = "miss";
   }
+
+  scoreboard[grade] += 1;
 
   const gradeDOM = document.querySelector(".grade");
   gradeDOM.innerText = grade;
@@ -114,7 +149,7 @@ function grading() {
 
   score += multiplier[grade] * scoring[Math.floor(level)];
 
-  document.querySelector(".score").innerText = score;
+  document.querySelector(".score").innerText = score.toLocaleString("en");
 
   // setTimeout((document.querySelector(".grade").innerText = ""), playTime / 4);
 }
@@ -199,14 +234,17 @@ function spacebar(e) {
 window.addEventListener("keydown", spacebar);
 
 let startTime = 0;
-const endTime = startTime + duration;
+let endTime = startTime + duration;
 let remainingTime = endTime - startTime;
 
-function startGame(e) {
+function startGame() {
   startTime = Date.now();
   const timerID = setInterval(timer, 1000);
   randomiseKeys(1);
   target.classList.add("target-move");
+  document.querySelector(".target-move").style.animation = `move ${
+    playTime / 1000
+  }s linear infinite`;
   startpos = target.getBoundingClientRect().left;
   window.requestAnimationFrame(getPosition);
 
@@ -215,9 +253,9 @@ function startGame(e) {
   setTimeout(missID, playTime * 0.9);
   setTimeout(levelID, playTime * 0.9);
 
-  document.querySelector(".timer").innerText = duration / 1000;
+  console.log(`playTime = ${playTime}`);
 
-  e.target.remove();
+  document.querySelector(".timer").innerText = duration / 1000;
 
   function timer() {
     remainingTime = Math.max(0, remainingTime - 1000);
@@ -231,14 +269,21 @@ function startGame(e) {
     clearInterval(missID);
     clearInterval(levelID);
     clearInterval(timerID);
-    document.querySelector(".game-container").style.animation = "fadeout 1s 1";
-    document.querySelector(".game-container").style.opacity = 0;
+    const gameContainer = document.querySelector(".game-container");
+    gameContainer.style.animation = "fadeout 1s 1";
+    gameContainer.style.opacity = 0;
+
+    const audio = document.querySelector(`#${songChosen}`);
+    audio.pause();
+    audio.currentTime = 0;
 
     displayScoreboard();
+
+    const retry = document.querySelector("#retry");
+    retry.style.display = "flex";
+    retry.addEventListener("click", initialise);
   }
 }
-
-document.querySelector("button").addEventListener("click", (e) => playAudio(e));
 
 function displayScoreboard() {
   // insert table structure
@@ -283,11 +328,66 @@ function displayScoreboard() {
     "fadein 1.5s 1 forwards";
 }
 
-function playAudio() {
-  const audio = document.querySelector("audio");
+let delay = 3200;
+let songChosen = "";
+function playAudio(songChosen) {
+  const audio = document.querySelector(`#${songChosen}`);
+  console.log(`#${songChosen}`);
   console.log(audio.readyState);
+  songList();
   if (audio.readyState >= 2) {
     audio.play();
-    setTimeout(startGame, 3200);
+    setTimeout(startGame, delay);
   }
+}
+
+const startButton = document.querySelector("#start-button");
+
+startButton.addEventListener("click", () => {
+  document.querySelector("#screen-1").style.display = "none";
+  document.querySelector("#screen-2").style.display = "flex";
+  songList();
+  playAudio(songChosen);
+});
+
+function songList() {
+  const selectedItem = document.querySelector("select").value;
+  bpm = songs[selectedItem]["bpm"];
+  duration = songs[selectedItem]["duration"];
+  delay = songs[selectedItem]["delay"];
+  songChosen = selectedItem;
+  console.log(delay);
+  endTime = startTime + duration;
+  remainingTime = endTime - startTime;
+  playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
+  // roundTime = playTime * 2; // time taken for each round from level 6 onwards
+}
+
+function initialise() {
+  level = 1;
+  score = 0;
+  document.querySelector(".level-number").innerText = Math.floor(level);
+  document.querySelector(".score").innerText = score.toLocaleString("en");
+
+  document.querySelector("#screen-1").style.display = "flex";
+  document.querySelector("#screen-2").style.display = "none";
+
+  for (const grade in scoreboard) {
+    scoreboard[grade] = 0;
+    document.querySelector("#data-div").innerText = 0;
+  }
+  console.log(scoreboard);
+
+  document.querySelector("#scoreboard-div").remove();
+
+  currentKeys = [];
+
+  document.querySelector(".target-move").style.animation = "";
+  target.classList.remove("target-move");
+  document.querySelector("#retry").style.display = "none";
+
+  const gameContainer = document.querySelector(".game-container");
+  gameContainer.style.animation = "";
+  gameContainer.style.opacity = 1;
+  document.querySelector(".arrow-keys").innerHTML = "";
 }

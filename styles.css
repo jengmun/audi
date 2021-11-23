@@ -1,6 +1,58 @@
 body {
-  height: 95vh;
+  height: 100vh;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+#screen-1 {
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-items: center;
+}
+
+.home-page {
+  background-image: url("cover-image2.jpg");
+  height: 100vh;
+  width: 100vw;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#start-button {
+  width: 10vw;
+  height: 3vw;
+  border-radius: 10px;
+  font-family: "Luckiest Guy";
+  font-size: 1.5vw;
+  background-image: linear-gradient(to bottom, #c9b2e0, #45008c);
+  color: white;
+}
+
+select {
+  margin-top: 1vw;
+  width: 20vw;
+  background-image: linear-gradient(to bottom, #c9b2e0, #45008c);
+  border-radius: 5px;
+  color: white;
+}
+
+option {
+  color: black;
+  background-color: #c9b2e0;
+}
+
+#screen-2 {
+  height: 100vh;
+  width: 100vw;
+  display: none;
   align-items: center;
   justify-content: center;
   background-image: url("AuTown.png");
@@ -35,7 +87,7 @@ body {
 
 .grade {
   font-family: "Luckiest Guy", cursive;
-  font-size: 1.8vw;
+  font-size: 2.5vw;
   color: darkred;
   display: flex;
   width: 50%;
@@ -140,14 +192,16 @@ body {
 .key {
   display: flex;
   border-radius: 50%;
+  border-color: #1f1a93;
   width: 3.5vw;
   height: 3.5vw;
   max-height: 4vw;
-  background-color: royalblue;
+  background-image: linear-gradient(to bottom, #1f1a93, #45d0fd);
   margin: 1.5px;
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: 3vw;
 }
 
 .pressed-key {
@@ -174,9 +228,10 @@ body {
   align-items: center;
   justify-content: flex-end;
   background-color: rgba(0, 0, 0, 0.6);
-  color: lightblue;
+  color: hsl(48deg 59% 50%);
   font-size: 2vw;
   padding-right: 10px;
+  font-family: "Fredoka One", cursive;
 }
 
 .timer {
@@ -222,7 +277,7 @@ tr {
 }
 
 .scoreboard {
-  width: 30vw;
+  width: 60vw;
 }
 
 #header-row {
@@ -235,13 +290,13 @@ tr {
 
 th {
   color: rgb(173, 135, 233);
-  width: 5vh;
+  width: 7vh;
 }
 
 td {
   color: white;
-  width: 5vh;
-  height: 5vh;
+  width: 7vh;
+  height: 7vh;
   padding: none;
 }
 
@@ -249,8 +304,8 @@ td {
   display: flex;
   background-color: rgb(25 39 40);
   border-radius: 50%;
-  height: 5vh;
-  width: 5vh;
+  height: 7vh;
+  width: 7vh;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
@@ -273,8 +328,7 @@ td {
   font-size: 1vw;
   font-weight: bold;
   display: none;
-}
-
-.remove {
-  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadein 1s 1;
 }

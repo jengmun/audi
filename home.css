@@ -1,4 +1,4 @@
-body {
+#screen-1 {
   background-color: black;
   display: flex;
   justify-items: center;
@@ -33,4 +33,9 @@ select {
   background-image: linear-gradient(to bottom, #c9b2e0, #45008c);
   border-radius: 5px;
   color: white;
+}
+
+option {
+  color: black;
+  background-color: #c9b2e0;
 }
