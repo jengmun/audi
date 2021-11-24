@@ -46,7 +46,7 @@ const scoring = {
 const songs = {
   "flying-duck": {
     bpm: 156,
-    duration: 5 * 1000,
+    duration: 240 * 1000,
     delay: 1538,
     highScore: 0,
   },
@@ -169,10 +169,6 @@ function grading() {
   }
 
   document.querySelector(".score").innerText = score.toLocaleString("en");
-
-  if (score > songs[songChosen]["highScore"]) {
-    songs[songChosen]["highScore"] = score;
-  }
 
   // setTimeout((document.querySelector(".grade").innerText = ""), playTime / 4);
 }
@@ -329,10 +325,17 @@ function startGame() {
 
     displayScoreboard();
 
-    if (songs[songChosen]["highScore"] > localStorage.getItem("high scores")) {
+    if (score > songs[songChosen]["highScore"]) {
+      songs[songChosen]["highScore"] = score;
+    }
+
+    if (
+      songs[songChosen]["highScore"] >
+      localStorage.getItem(`highscore.${songChosen}`)
+    ) {
       localStorage.setItem(
         `highscore.${songChosen}`,
-        songs[songChosen]["highScore"]
+        songs[songChosen]["highScore"].toLocaleString("en")
       );
     }
 
