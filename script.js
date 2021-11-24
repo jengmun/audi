@@ -78,6 +78,13 @@ const songs = {
     delay: 2000,
     highScore: 0,
   },
+
+  "closed-ending": {
+    bpm: 95,
+    duration: 252 * 1000,
+    delay: 2000,
+    highScore: 0,
+  },
 };
 
 const target = document.querySelector(".target");
