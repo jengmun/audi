@@ -13,26 +13,33 @@
       href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&family=Road+Rage&display=swap"
       rel="stylesheet"
     />
+    <script
+      src="https://kit.fontawesome.com/2928fc530d.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div id="screen-1">
       <div class="home-page">
         <button id="start-button">&#9658; start</button>
         <select name="song-list">
-          <option value="beat-city">Audition - Beat City (120bpm)</option>
-          <option value="you">Audition - You (136bpm)</option>
           <option value="flying-duck">
             Cherry Filter - Flying Duck(156bpm)
           </option>
+          <option value="beat-city">Audition - Beat City (120bpm)</option>
+          <option value="you">Audition - You (136bpm)</option>
           <option value="eve">Kaikai Kitan - Eve (185bpm)</option>
           <option value="eight">IU - Eight (ft Suga) (120bpm)</option>
         </select>
-        <button id="full-screen">full screen</button>
       </div>
     </div>
 
     <div id="screen-2">
       <div id="game-page">
+        <!-- <div id="high-score-div">
+          HIGH SCORE:
+          <div id="high-score">100</div>
+        </div> -->
         <div class="game-container">
           <div class="grade"></div>
           <div class="upper-container">
@@ -48,8 +55,18 @@
           <div class="arrow-keys"></div>
         </div>
         <div class="score">0</div>
-        <div class="timer">0:00 <progress></progress></div>
-
+        <div class="timer">
+          <div id="time">0:00</div>
+          <div id="song-progress">
+            <div id="progress-indicator"></div>
+          </div>
+        </div>
+        <audio
+          id="flying-duck"
+          preload="auto"
+          src="/soundtracks/Cherry Filter - Flying Duck.mp3"
+          type="audio/mp3"
+        ></audio>
         <audio
           id="beat-city"
           preload="auto"
@@ -60,12 +77,6 @@
           id="you"
           preload="auto"
           src="/soundtracks/Audition - You.mp3"
-          type="audio/mp3"
-        ></audio>
-        <audio
-          id="flying-duck"
-          preload="auto"
-          src="/soundtracks/Cherry Filter - Flying Duck.mp3"
           type="audio/mp3"
         ></audio>
         <audio
@@ -81,7 +92,7 @@
           type="audio/mp3"
         ></audio>
         <div class="ending-page">
-          <button id="retry">retry</button>
+          <button id="retry">RETRY</button>
         </div>
       </div>
     </div>

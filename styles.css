@@ -32,13 +32,13 @@ body {
   border-radius: 10px;
   font-family: "Luckiest Guy";
   font-size: 1.5vw;
-  background-image: linear-gradient(to bottom, #c9b2e0, #45008c);
+  background-image: linear-gradient(to bottom, #c9b2e0, #d70cf1);
   color: white;
   cursor: pointer;
 }
 
 select {
-  margin-top: 1vw;
+  margin-top: 2vw;
   width: 20vw;
   background-image: linear-gradient(to bottom, #c9b2e0, #45008c);
   border-radius: 5px;
@@ -66,6 +66,24 @@ option {
   background-image: url("/images/AuTown.png");
   background-size: 100% 100%;
   background-position: center;
+}
+
+#high-score-div {
+  position: absolute;
+  font-family: "Luckiest Guy", cursive;
+  top: 1vw;
+  right: 1vw;
+  font-size: 1vw;
+  color: #ce7090;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#high-score {
+  font-family: "Fredoka One", cursive;
+  margin-left: 2vw;
+  font-size: 2vw;
 }
 
 .game-container {
@@ -144,7 +162,7 @@ option {
 .rhythm-bar {
   display: flex;
   border-radius: 50px;
-  border: black 1px solid;
+  border: grey 1px solid;
   width: 40%;
   height: 1vw;
   background-color: rgba(0, 0, 0, 0.6);
@@ -211,7 +229,7 @@ option {
 .arrow-keys {
   display: flex;
   border-radius: 50px;
-  border: black 1px solid;
+  border: grey 1px solid;
   width: 100%;
   height: 4vw;
   background-color: rgba(0, 0, 0, 0.6);
@@ -254,7 +272,11 @@ option {
   width: 3.5vw;
   height: 3.5vw;
   max-height: 4vw;
-  background-color: greenyellow;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(92, 165, 23),
+    rgb(217, 255, 0)
+  );
   margin: 1.5px;
   align-items: center;
   justify-content: center;
@@ -283,7 +305,7 @@ option {
   height: 3.5vw;
   border: 1px black solid;
   position: absolute;
-  right: 2vh;
+  right: 1vw;
   bottom: 30vh;
   display: flex;
   align-items: center;
@@ -297,7 +319,7 @@ option {
 
 .timer {
   width: 10vw;
-  height: 2vw;
+  height: 3vw;
   border: 2px white solid;
   border-radius: 10px;
   background-color: black;
@@ -312,11 +334,44 @@ option {
   flex-direction: column;
 }
 
+#time {
+  font-size: 1vw;
+}
+
+#song-progress {
+  display: flex;
+  border-radius: 50px;
+  border: black 1px solid;
+  width: 90%;
+  height: 1vw;
+  background-color: hsl(48deg 59% 50%);
+  align-items: center;
+  position: relative;
+  align-self: center;
+}
+
+#progress-indicator {
+  border-radius: 50%;
+  border: 0.5px solid white;
+  background-color: #45008c;
+  width: 1vw;
+  height: 1vw;
+}
+
+@keyframes time {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(10vw * 0.9 - 1vw - 1px));
+  }
+}
+
 table,
 tr {
   padding: 2px;
   text-align: center;
-  font-family: "Luckiest Guy", cursive;
+  font-family: "Fredoka One", cursive;
 }
 
 #scoreboard-div {
@@ -347,11 +402,11 @@ tr {
 }
 
 #data-row {
-  background-color: rgba(94, 162, 31, 0.6);
+  background-color: rgba(37, 171, 175, 0.6);
 }
 
 th {
-  color: rgb(173, 135, 233);
+  color: white;
   width: 7vh;
 }
 
@@ -379,12 +434,12 @@ td {
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 30vh;
+  bottom: 33vh;
 }
 
 #retry {
   border-radius: 20px;
-  background-color: lightpink;
+  background-color: #788be0;
   width: 8vw;
   height: 5vh;
   font-size: 1vw;
@@ -394,10 +449,11 @@ td {
   justify-content: center;
   animation: fadein 1s 1;
   cursor: pointer;
+  color: white;
 }
 
 #perfect {
-  color: rgb(247, 0, 255);
+  color: rgb(212, 71, 255);
 }
 
 #great {
@@ -409,7 +465,7 @@ td {
 }
 
 #bad {
-  color: rgb(255, 0, 128);
+  color: rgb(245, 32, 139);
 }
 
 #miss {

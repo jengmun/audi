@@ -37,50 +37,55 @@ const scoring = {
   4: 2500,
   5: 3000,
   6: 5000,
-  7: 6000,
-  8: 7000,
-  9: 8000,
-  9.8: 20000,
+  7: 5500,
+  8: 6000,
+  9: 6500,
+  9.8: 10000,
 };
 
 const songs = {
+  "flying-duck": {
+    bpm: 156,
+    duration: 5 * 1000,
+    delay: 1538,
+    highScore: 0,
+  },
+
   "beat-city": {
     bpm: 120,
     duration: 250 * 1000,
     delay: 3170,
+    highScore: 0,
   },
 
   you: {
     bpm: 136,
     duration: 250 * 1000,
     delay: 3350,
-  },
-
-  "flying-duck": {
-    bpm: 156,
-    duration: 240 * 1000,
-    delay: 1538,
+    highScore: 0,
   },
 
   eve: {
     bpm: 185,
     duration: 219 * 1000,
     delay: 1220,
+    highScore: 0,
   },
 
   eight: {
     bpm: 120,
     duration: 167 * 1000,
     delay: 2000,
+    highScore: 0,
   },
 };
 
 const target = document.querySelector(".target");
 const targetWidth = document.querySelector(".target").offsetWidth;
 let rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
-let bpm = 200;
+let bpm = 100;
 let playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
-let roundTime = playTime * 2; // time taken for each round from level 6 onwards
+// let roundTime = playTime * 2; // time taken for each round from level 6 onwards
 let level = 1;
 let score = 0;
 let currentKeys = [];
@@ -107,12 +112,11 @@ function getPosition() {
 
 function grading() {
   rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
-  console.log("in grading");
 
   const perfectBeat = startpos + rhythmBarWidth * 0.75;
   const deviation = Math.abs(pressTime - perfectBeat);
 
-  if (deviation < rhythmBarWidth * 0.02) {
+  if (deviation < rhythmBarWidth * 0.01) {
     grade = "perfect";
     chainMultiple++;
   } else if (deviation < rhythmBarWidth * 0.05) {
@@ -165,6 +169,10 @@ function grading() {
   }
 
   document.querySelector(".score").innerText = score.toLocaleString("en");
+
+  if (score > songs[songChosen]["highScore"]) {
+    songs[songChosen]["highScore"] = score;
+  }
 
   // setTimeout((document.querySelector(".grade").innerText = ""), playTime / 4);
 }
@@ -226,10 +234,7 @@ function randomiseKeys(lvl) {
       document.querySelector(".arrow-keys").childNodes[
         Math.floor(Math.random() * Math.floor(level))
       ];
-    // console.log(document.querySelector(".arrow-keys"));
-    // console.log(level);
-    // console.log(chanceKey);
-    // console.log(Math.floor(Math.random() * level));
+
     chanceKey.classList.add("chance-key");
     chanceKey.innerHTML = chanceUniCode[chanceKey.id];
   }
@@ -238,8 +243,7 @@ function randomiseKeys(lvl) {
     for (let i = 1; i <= 3; i++) {
       const index = Math.floor(Math.random() * Math.floor(level));
       let chanceKey = document.querySelector(".arrow-keys").childNodes[index];
-      console.log(index);
-      console.log(chanceKey);
+
       if (chanceKey.classList.contains("chance-key")) {
         i--;
       } else {
@@ -281,14 +285,9 @@ function startGame() {
 
   const timerID = setInterval(timer, 1000);
 
-  let minutes = Math.floor(duration / 1000 / 60);
-  let seconds = 0;
-  if ((duration / 1000) % 60 >= 10) {
-    seconds = (duration / 1000) % 60;
-  } else {
-    seconds = `0${(duration / 1000) % 60}`;
-  }
-  document.querySelector(".timer").innerText = `${minutes}:${seconds}`;
+  document.querySelector("#progress-indicator").style.animation = `time ${
+    duration / 1000
+  }s linear 1 forwards`;
 
   const missID = setInterval(defaultMiss, playTime);
   const levelID = setInterval(nextLevel, playTime);
@@ -307,7 +306,7 @@ function startGame() {
     } else {
       seconds = `0${(remainingTime / 1000) % 60}`;
     }
-    document.querySelector(".timer").innerText = `${minutes}:${seconds}`;
+    document.querySelector("#time").innerText = `${minutes}:${seconds}`;
 
     if (remainingTime === 0) {
       songEnd();
@@ -330,6 +329,17 @@ function startGame() {
 
     displayScoreboard();
 
+    if (songs[songChosen]["highScore"] > localStorage.getItem("high scores")) {
+      localStorage.setItem(
+        `highscore.${songChosen}`,
+        songs[songChosen]["highScore"]
+      );
+    }
+
+    if (document.querySelector("#chance")) {
+      document.querySelector("#chance").remove();
+    }
+
     const retry = document.querySelector("#retry");
     retry.style.display = "flex";
     retry.addEventListener("click", initialise);
@@ -343,12 +353,12 @@ function displayScoreboard() {
     `<div id="scoreboard-div">
   <table class="scoreboard">
     <tr id="header-row">
-      <th>Score</th>
-      <th>Perfect</th>
-      <th>Great</th>
-      <th>Cool</th>
-      <th>Bad</th>
-      <th>Miss</th>
+      <th>SCORE</th>
+      <th>PERFECT</th>
+      <th>GREAT</th>
+      <th>COOL</th>
+      <th>BAD</th>
+      <th>MISS</th>
     </tr>
   </table>
 </div>`
@@ -398,6 +408,29 @@ function songList() {
   // roundTime = playTime * 2; // time taken for each round from level 6 onwards
 }
 
+function fullScreen(e) {
+  if (e.keyCode === 70) {
+    document.querySelector("body").requestFullscreen();
+  }
+}
+
+function chance3(e) {
+  if (e.keyCode === 46) {
+    if (chance === "off") {
+      chance = "on";
+      const chanceButton = document.createElement("div");
+      chanceButton.id = "chance";
+      chanceButton.innerText = "C";
+      document
+        .querySelector(".game-container")
+        .insertAdjacentElement("afterend", chanceButton);
+    } else {
+      chance = "off";
+      document.querySelector("#chance").remove();
+    }
+  }
+}
+
 function initialise() {
   level = 1;
   score = 0;
@@ -410,6 +443,9 @@ function initialise() {
   document.querySelector(".arrow-keys").innerHTML = "";
   document.querySelector("#retry").style.display = "none";
   document.querySelector("#screen-2").style.animation = "";
+  document.querySelector("#progress-indicator").style.animation = "";
+  document.querySelector("#high-score-div").remove();
+  chance = "off";
 
   for (const grade in scoreboard) {
     scoreboard[grade] = 0;
@@ -444,30 +480,34 @@ document.querySelector("#start-button").addEventListener("click", () => {
   document.querySelector("#screen-1").style.display = "none";
   document.querySelector("#screen-2").style.display = "flex";
   document.querySelector("#screen-2").style.animation = "fadein 1s 1";
+
+  let minutes = Math.floor(duration / 1000 / 60);
+  let seconds = 0;
+  if ((duration / 1000) % 60 >= 10) {
+    seconds = (duration / 1000) % 60;
+  } else {
+    seconds = `0${(duration / 1000) % 60}`;
+  }
+  document.querySelector("#time").innerText = `${minutes}:${seconds}`;
+
   songList();
   playAudio(songChosen);
+
+  const highScoreDiv = document.createElement("div");
+  highScoreDiv.innerText = "HIGH SCORE: ";
+  highScoreDiv.id = "high-score-div";
+  const highScore = document.createElement("div");
+  if (localStorage.getItem(`highscore.${songChosen}`)) {
+    highScore.innerText = localStorage.getItem(`highscore.${songChosen}`);
+  } else {
+    highScore.innerText = 0;
+  }
+  highScore.id = "high-score";
+
+  highScoreDiv.append(highScore);
+  document.querySelector("#game-page").prepend(highScoreDiv);
 });
 
-document.querySelector("#full-screen").addEventListener("click", fullScreen);
+window.addEventListener("keydown", fullScreen);
 
-function fullScreen() {
-  document.querySelector("body").requestFullscreen();
-}
-
-function chance3(e) {
-  if (e.keyCode === 46) {
-    if (chance === "off") {
-      chance = "on";
-      const chanceButton = document.createElement("div");
-      chanceButton.id = "chance";
-      chanceButton.innerText = "C";
-      document
-        .querySelector(".game-container")
-        .insertAdjacentElement("afterend", chanceButton);
-    } else {
-      chance = "off";
-      document.querySelector("#chance").remove();
-    }
-  }
-}
 window.addEventListener("keydown", chance3);
