@@ -280,7 +280,15 @@ function startGame() {
   window.requestAnimationFrame(getPosition);
 
   const timerID = setInterval(timer, 1000);
-  document.querySelector(".timer").innerText = duration / 1000;
+
+  let minutes = Math.floor(duration / 1000 / 60);
+  let seconds = 0;
+  if ((duration / 1000) % 60 >= 10) {
+    seconds = (duration / 1000) % 60;
+  } else {
+    seconds = `0${(duration / 1000) % 60}`;
+  }
+  document.querySelector(".timer").innerText = `${minutes}:${seconds}`;
 
   const missID = setInterval(defaultMiss, playTime);
   const levelID = setInterval(nextLevel, playTime);
@@ -291,7 +299,16 @@ function startGame() {
 
   function timer() {
     remainingTime = Math.max(0, remainingTime - 1000);
-    document.querySelector(".timer").innerText = remainingTime / 1000;
+
+    let minutes = Math.floor(remainingTime / 1000 / 60);
+    let seconds = 0;
+    if ((remainingTime / 1000) % 60 >= 10) {
+      seconds = (remainingTime / 1000) % 60;
+    } else {
+      seconds = `0${(remainingTime / 1000) % 60}`;
+    }
+    document.querySelector(".timer").innerText = `${minutes}:${seconds}`;
+
     if (remainingTime === 0) {
       songEnd();
     }
