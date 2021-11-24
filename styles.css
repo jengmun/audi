@@ -262,6 +262,22 @@ option {
   font-size: 3vw;
 }
 
+#chance {
+  display: flex;
+  border-radius: 50%;
+  width: 3.5vw;
+  height: 3.5vw;
+  background-color: rgb(28, 219, 44);
+  justify-content: center;
+  align-items: center;
+  border-style: double;
+  position: absolute;
+  bottom: 30vh;
+  right: 29vw;
+  font-size: 1.5vw;
+  font-family: "Fredoka One", cursive;
+}
+
 .score {
   width: 16vw;
   height: 3.5vw;

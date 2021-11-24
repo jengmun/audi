@@ -40,14 +40,14 @@ const scoring = {
   7: 6000,
   8: 7000,
   9: 8000,
-  9.8: 10000,
+  9.8: 20000,
 };
 
 const songs = {
   "beat-city": {
     bpm: 120,
     duration: 250 * 1000,
-    delay: 3190,
+    delay: 3170,
   },
 
   you: {
@@ -98,6 +98,7 @@ let endTime = startTime + duration;
 let remainingTime = endTime - startTime;
 let delay = 0;
 let songChosen = "";
+let chance = "off";
 
 function getPosition() {
   currentPosition = target.getBoundingClientRect().left + targetWidth / 2;
@@ -157,7 +158,11 @@ function grading() {
     gradeDOM.style.opacity = "0";
   }, playTime / 2 + 1);
 
-  score += multiplier[grade] * scoring[Math.floor(level)];
+  if (chance === "on" && level >= 6 && level < 9.8) {
+    score += multiplier[grade] * scoring[Math.floor(level)] * 2;
+  } else {
+    score += multiplier[grade] * scoring[Math.floor(level)];
+  }
 
   document.querySelector(".score").innerText = score.toLocaleString("en");
 
@@ -217,16 +222,31 @@ function randomiseKeys(lvl) {
   window.addEventListener("keydown", spacebar);
 
   if (level === 9.8) {
-    const chanceKey =
+    let chanceKey =
       document.querySelector(".arrow-keys").childNodes[
         Math.floor(Math.random() * Math.floor(level))
       ];
-    console.log(document.querySelector(".arrow-keys"));
-    console.log(level);
-    console.log(chanceKey);
-    console.log(Math.floor(Math.random() * level));
+    // console.log(document.querySelector(".arrow-keys"));
+    // console.log(level);
+    // console.log(chanceKey);
+    // console.log(Math.floor(Math.random() * level));
     chanceKey.classList.add("chance-key");
     chanceKey.innerHTML = chanceUniCode[chanceKey.id];
+  }
+
+  if (chance === "on" && level >= 6 && level < 9.8) {
+    for (let i = 1; i <= 3; i++) {
+      const index = Math.floor(Math.random() * Math.floor(level));
+      let chanceKey = document.querySelector(".arrow-keys").childNodes[index];
+      console.log(index);
+      console.log(chanceKey);
+      if (chanceKey.classList.contains("chance-key")) {
+        i--;
+      } else {
+        chanceKey.classList.add("chance-key");
+        chanceKey.innerHTML = chanceUniCode[chanceKey.id];
+      }
+    }
   }
 
   currentKeysHTML = document.querySelector(".arrow-keys").innerHTML;
@@ -281,6 +301,8 @@ function startGame() {
     clearInterval(missID);
     clearInterval(levelID);
     clearInterval(timerID);
+
+    window.removeEventListener("keydown", spacebar);
 
     const gameContainer = document.querySelector(".game-container");
     gameContainer.style.animation = "fadeout 1s 1 forwards";
@@ -417,15 +439,18 @@ function fullScreen() {
 
 function chance3(e) {
   if (e.keyCode === 46) {
-    for (let i = Math.floor(Math.random() * Math.floor(level)); ; ) {
-      let chanceKey = document.querySelector(".arrow-keys").childNodes[i];
-      chanceKey.classList.add("chance-key");
-      chanceKey.innerHTML = chanceUniCode[chanceKey.id];
-      if (document.getElementsByClassName(".chance-key")[2] !== undefined) {
-        return;
-      }
+    if (chance === "off") {
+      chance = "on";
+      const chanceButton = document.createElement("div");
+      chanceButton.id = "chance";
+      chanceButton.innerText = "C";
+      document
+        .querySelector(".game-container")
+        .insertAdjacentElement("afterend", chanceButton);
+    } else {
+      chance = "off";
+      document.querySelector("#chance").remove();
     }
   }
 }
-
 window.addEventListener("keydown", chance3);
