@@ -10,7 +10,7 @@
 
 This game was inspired by the game AuditionSEA which I played frequently as a child and was built as an educational project.
 
-Please visit <a href ="https://jengmun.github.io"> to play the game.
+Please visit <a href ="https://jengmun.github.io">this link<a> to play the game.
 
 # Features
 
@@ -44,7 +44,7 @@ Please visit <a href ="https://jengmun.github.io"> to play the game.
 - Bad
 - Miss
 
-These will be awarded based on your accuracy when hitting the spacebar, and are listed from highest to lowest points obtained. No points will be awarded for a miss.
+  These will be awarded based on your accuracy when hitting the spacebar, and are listed from highest to lowest points obtained. No points will be awarded for a miss.
 
 9. If a perfect grade is obtained consecutively, there will be a chain. E.g. if two perfects are obtained consecutively, the second grade will be displayed as "perfect x1". Chaining will multiply the score considerably.
 

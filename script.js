@@ -92,7 +92,6 @@ const targetWidth = document.querySelector(".target").offsetWidth;
 let rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
 let bpm = 100;
 let playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
-// let roundTime = playTime * 2; // time taken for each round from level 6 onwards
 let level = 1;
 let score = 0;
 let currentKeys = [];
