@@ -75,14 +75,14 @@ const songs = {
   eight: {
     bpm: 120,
     duration: 167 * 1000,
-    delay: 2000,
+    delay: 1900,
     highScore: 0,
   },
 
   "closed-ending": {
     bpm: 95,
     duration: 252 * 1000,
-    delay: 2000,
+    delay: 1900,
     highScore: 0,
   },
 };
@@ -136,8 +136,7 @@ function grading() {
     grade = "miss";
   }
 
-  if (!document.querySelector(".key")) {
-  } else {
+  if (document.querySelector(".key")) {
     grade = "miss";
   }
 
@@ -292,10 +291,34 @@ function startGame() {
     duration / 1000
   }s linear 1 forwards`;
 
-  const missID = setInterval(defaultMiss, playTime);
-  const levelID = setInterval(nextLevel, playTime);
-  setTimeout(missID, playTime * 0.9);
-  setTimeout(levelID, playTime * 0.9);
+  function missInterval() {
+    const missID = setInterval(() => {
+      if (remainingTime === 0) {
+        clearInterval(missID);
+      }
+      defaultMiss();
+    }, playTime);
+  }
+
+  function levelInterval() {
+    const levelID = setInterval(() => {
+      if (remainingTime === 0) {
+        clearInterval(levelID);
+      }
+      nextLevel();
+    }, playTime);
+  }
+
+  setTimeout(() => {
+    defaultMiss();
+
+    missInterval();
+  }, playTime * 0.9);
+
+  setTimeout(() => {
+    nextLevel();
+    levelInterval();
+  }, playTime * 0.901);
 
   randomiseKeys(1);
 
@@ -317,8 +340,6 @@ function startGame() {
   }
 
   function songEnd() {
-    clearInterval(missID);
-    clearInterval(levelID);
     clearInterval(timerID);
 
     window.removeEventListener("keydown", spacebar);
@@ -337,8 +358,11 @@ function startGame() {
     }
 
     if (
+      !localStorage.getItem(`highscore.${songChosen}`) ||
       songs[songChosen]["highScore"] >
-      localStorage.getItem(`highscore.${songChosen}`)
+        Number(
+          localStorage.getItem(`highscore.${songChosen}`).replace(/[^\d]/g, "")
+        )
     ) {
       localStorage.setItem(
         `highscore.${songChosen}`,
@@ -445,6 +469,7 @@ function initialise() {
   level = 1;
   score = 0;
   currentKeys = [];
+  chainMultiple = -1;
 
   document.querySelector(".level-number").innerText = Math.floor(level);
   document.querySelector(".score").innerText = score.toLocaleString("en");
