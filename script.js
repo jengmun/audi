@@ -174,8 +174,6 @@ function grading() {
   }
 
   document.querySelector(".score").innerText = score.toLocaleString("en");
-
-  // setTimeout((document.querySelector(".grade").innerText = ""), playTime / 4);
 }
 
 function nextLevel() {
@@ -221,12 +219,8 @@ function randomiseKeys(lvl) {
     newArrowKey.classList.add(`${currentRound}`);
     newArrowKey.innerHTML = uniCode[keyCode];
 
-    // function displayKeys() {
     document.querySelector(".arrow-keys").append(newArrowKey);
     currentKeys.push(newArrowKey);
-    //   }
-
-    //   displayKeys();
   }
   window.addEventListener("keydown", spacebar);
 
@@ -259,7 +253,7 @@ function randomiseKeys(lvl) {
 
 function defaultMiss() {
   if (document.querySelector(".key")) {
-    pressTime = currentPosition; // 0.1x after playTime ends
+    pressTime = currentPosition;
     grading();
   }
 }
@@ -437,8 +431,7 @@ function songList() {
 
   endTime = startTime + duration;
   remainingTime = endTime - startTime;
-  playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
-  // roundTime = playTime * 2; // time taken for each round from level 6 onwards
+  playTime = (4 / bpm) * 60 * 1000;
 }
 
 function fullScreen(e) {
