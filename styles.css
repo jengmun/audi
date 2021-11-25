@@ -13,7 +13,7 @@ body {
   justify-items: center;
 }
 
-.home-page {
+#home-page {
   background-image: url("/images/cover-image2.jpg");
   height: 100vh;
   width: 100vw;
@@ -89,7 +89,7 @@ option {
   font-size: 2vw;
 }
 
-.game-container {
+#game-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -108,7 +108,7 @@ option {
   }
 }
 
-.upper-container {
+#upper-container {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -162,7 +162,7 @@ option {
   color: rgb(0, 247, 255);
 }
 
-.rhythm-bar {
+#rhythm-bar {
   display: flex;
   border-radius: 50px;
   border: grey 1px solid;
@@ -174,7 +174,7 @@ option {
   align-self: center;
 }
 
-.target {
+#target {
   border-radius: 50%;
   border: 0.5px solid white;
   background-color: red;
@@ -197,7 +197,7 @@ option {
   }
 }
 
-.target-area {
+#target-area {
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0.3),
@@ -229,7 +229,7 @@ option {
   }
 }
 
-.arrow-keys {
+#arrow-keys {
   display: flex;
   border-radius: 50px;
   border: grey 1px solid;
@@ -303,7 +303,7 @@ option {
   font-family: "Fredoka One", cursive;
 }
 
-.score {
+#score {
   width: 16vw;
   height: 3.5vw;
   border: 1px black solid;
@@ -320,7 +320,7 @@ option {
   font-family: "Fredoka One", cursive;
 }
 
-.timer {
+#timer {
   width: 10vw;
   height: 3vw;
   border: 2px white solid;
@@ -431,7 +431,7 @@ td {
   align-items: center;
 }
 
-.ending-page {
+#ending-page {
   display: flex;
   width: 100vw;
   justify-content: center;

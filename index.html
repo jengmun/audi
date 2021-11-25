@@ -13,14 +13,10 @@
       href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&family=Road+Rage&display=swap"
       rel="stylesheet"
     />
-    <script
-      src="https://kit.fontawesome.com/2928fc530d.js"
-      crossorigin="anonymous"
-    ></script>
   </head>
   <body>
     <div id="screen-1">
-      <div class="home-page">
+      <div id="home-page">
         <button id="start-button">&#9658; start</button>
         <select name="song-list">
           <option value="flying-duck">
@@ -37,22 +33,22 @@
 
     <div id="screen-2">
       <div id="game-page">
-        <div class="game-container">
+        <div id="game-container">
           <div class="grade"></div>
-          <div class="upper-container">
+          <div id="upper-container">
             <div class="level">
-              <span id="level-label">Level </span
+              <span class="level-label">Level </span
               ><span class="level-number">1</span>
             </div>
-            <div class="rhythm-bar">
-              <div class="target-area"></div>
-              <div class="target"></div>
+            <div id="rhythm-bar">
+              <div id="target-area"></div>
+              <div id="target"></div>
             </div>
           </div>
-          <div class="arrow-keys"></div>
+          <div id="arrow-keys"></div>
         </div>
-        <div class="score">0</div>
-        <div class="timer">
+        <div id="score">0</div>
+        <div id="timer">
           <div id="time">0:00</div>
           <div id="song-progress">
             <div id="progress-indicator"></div>
@@ -88,14 +84,21 @@
           src="/soundtracks/IU - eight (ft Suga).mp3"
           type="audio/mp3"
         ></audio>
-
         <audio
           id="closed-ending"
           preload="auto"
           src="/soundtracks/Shaun - Closed Ending.mp3"
           type="audio/mp3"
         ></audio>
-        <div class="ending-page">
+
+        <audio
+          id="spacebar-sound"
+          preload="auto"
+          src="/soundtracks/space_bar.wav"
+          type="audio/wav"
+        ></audio>
+
+        <div id="ending-page">
           <button id="retry">RETRY</button>
         </div>
       </div>

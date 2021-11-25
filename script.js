@@ -49,13 +49,15 @@ const songs = {
     duration: 240 * 1000,
     delay: 1538,
     highScore: 0,
+    volume: 1,
   },
 
   "beat-city": {
     bpm: 120,
     duration: 250 * 1000,
-    delay: 3170,
+    delay: 3100,
     highScore: 0,
+    volume: 0.5,
   },
 
   you: {
@@ -63,6 +65,7 @@ const songs = {
     duration: 250 * 1000,
     delay: 3350,
     highScore: 0,
+    volume: 1,
   },
 
   eve: {
@@ -70,6 +73,7 @@ const songs = {
     duration: 219 * 1000,
     delay: 1220,
     highScore: 0,
+    volume: 0.3,
   },
 
   eight: {
@@ -77,19 +81,21 @@ const songs = {
     duration: 167 * 1000,
     delay: 1900,
     highScore: 0,
+    volume: 0.5,
   },
 
   "closed-ending": {
     bpm: 95,
     duration: 252 * 1000,
-    delay: 1900,
+    delay: 2050,
     highScore: 0,
+    volume: 0.4,
   },
 };
 
-const target = document.querySelector(".target");
-const targetWidth = document.querySelector(".target").offsetWidth;
-let rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
+const target = document.querySelector("#target");
+const targetWidth = document.querySelector("#target").offsetWidth;
+let rhythmBarWidth = document.querySelector("#rhythm-bar").clientWidth;
 let bpm = 100;
 let playTime = (4 / bpm) * 60 * 1000; // time taken for every 4 beats
 let level = 1;
@@ -117,7 +123,7 @@ function getPosition() {
 }
 
 function grading() {
-  rhythmBarWidth = document.querySelector(".rhythm-bar").clientWidth;
+  rhythmBarWidth = document.querySelector("#rhythm-bar").clientWidth;
 
   const perfectBeat = startpos + rhythmBarWidth * 0.75;
   const deviation = Math.abs(pressTime - perfectBeat);
@@ -173,7 +179,7 @@ function grading() {
     score += multiplier[grade] * scoring[Math.floor(level)];
   }
 
-  document.querySelector(".score").innerText = score.toLocaleString("en");
+  document.querySelector("#score").innerText = score.toLocaleString("en");
 }
 
 function nextLevel() {
@@ -188,7 +194,7 @@ function nextLevel() {
     level = 6;
   }
 
-  const levelLabel = document.querySelector("#level-label");
+  const levelLabel = document.querySelector(".level-label");
   const levelNumber = document.querySelector(".level-number");
 
   if (level < 9.8) {
@@ -208,7 +214,7 @@ function nextLevel() {
 
 function randomiseKeys(lvl) {
   currentKeys = [];
-  document.querySelector(".arrow-keys").innerHTML = "";
+  document.querySelector("#arrow-keys").innerHTML = "";
   currentRound++;
   for (let i = 1; i <= lvl; i++) {
     const keyCode = Math.floor(Math.random() * 4) + 37;
@@ -219,14 +225,14 @@ function randomiseKeys(lvl) {
     newArrowKey.classList.add(`${currentRound}`);
     newArrowKey.innerHTML = uniCode[keyCode];
 
-    document.querySelector(".arrow-keys").append(newArrowKey);
+    document.querySelector("#arrow-keys").append(newArrowKey);
     currentKeys.push(newArrowKey);
   }
   window.addEventListener("keydown", spacebar);
 
   if (level === 9.8) {
     let chanceKey =
-      document.querySelector(".arrow-keys").childNodes[
+      document.querySelector("#arrow-keys").childNodes[
         Math.floor(Math.random() * Math.floor(level))
       ];
 
@@ -237,7 +243,7 @@ function randomiseKeys(lvl) {
   if (chance === "on" && level >= 6 && level < 9.8) {
     for (let i = 1; i <= 3; i++) {
       const index = Math.floor(Math.random() * Math.floor(level));
-      let chanceKey = document.querySelector(".arrow-keys").childNodes[index];
+      let chanceKey = document.querySelector("#arrow-keys").childNodes[index];
 
       if (chanceKey.classList.contains("chance-key")) {
         i--;
@@ -248,7 +254,7 @@ function randomiseKeys(lvl) {
     }
   }
 
-  currentKeysHTML = document.querySelector(".arrow-keys").innerHTML;
+  currentKeysHTML = document.querySelector("#arrow-keys").innerHTML;
 }
 
 function defaultMiss() {
@@ -262,8 +268,9 @@ function spacebar(e) {
   if (e.keyCode === 32) {
     pressTime = currentPosition;
     grading();
-    document.querySelector(".arrow-keys").innerHTML = "";
+    document.querySelector("#arrow-keys").innerHTML = "";
     window.removeEventListener("keydown", spacebar);
+    spacebarSound();
   }
 }
 
@@ -337,7 +344,7 @@ function startGame() {
 
     window.removeEventListener("keydown", spacebar);
 
-    const gameContainer = document.querySelector(".game-container");
+    const gameContainer = document.querySelector("#game-container");
     gameContainer.style.animation = "fadeout 1s 1 forwards";
 
     const audio = document.querySelector(`#${songChosen}`);
@@ -375,7 +382,7 @@ function startGame() {
 
 function displayScoreboard() {
   // insert table structure
-  document.querySelector(".timer").insertAdjacentHTML(
+  document.querySelector("#timer").insertAdjacentHTML(
     "afterend",
     `<div id="scoreboard-div">
   <table class="scoreboard">
@@ -427,11 +434,20 @@ function songList() {
   bpm = songs[selectedItem]["bpm"];
   duration = songs[selectedItem]["duration"];
   delay = songs[selectedItem]["delay"];
+  const volume = songs[selectedItem]["volume"];
   songChosen = selectedItem;
+
+  document.querySelector(`#${songChosen}`).volume = volume;
 
   endTime = startTime + duration;
   remainingTime = endTime - startTime;
   playTime = (4 / bpm) * 60 * 1000;
+}
+
+function spacebarSound() {
+  const sound = document.querySelector("#spacebar-sound");
+  sound.volume = 0.2;
+  sound.play();
 }
 
 function fullScreen(e) {
@@ -448,7 +464,7 @@ function chance3(e) {
       chanceButton.id = "chance";
       chanceButton.innerText = "C";
       document
-        .querySelector(".game-container")
+        .querySelector("#game-container")
         .insertAdjacentElement("afterend", chanceButton);
     } else {
       chance = "off";
@@ -463,11 +479,13 @@ function initialise() {
   currentKeys = [];
   chainMultiple = -1;
 
+  document.querySelector(".level-label").innerText = `Level `;
   document.querySelector(".level-number").innerText = Math.floor(level);
-  document.querySelector(".score").innerText = score.toLocaleString("en");
+  document.querySelector(".level-number").removeAttribute("id", "finish-move");
+  document.querySelector("#score").innerText = score.toLocaleString("en");
   document.querySelector("#screen-1").style.display = "flex";
   document.querySelector("#screen-2").style.display = "none";
-  document.querySelector(".arrow-keys").innerHTML = "";
+  document.querySelector("#arrow-keys").innerHTML = "";
   document.querySelector("#retry").style.display = "none";
   document.querySelector("#screen-2").style.animation = "";
   document.querySelector("#progress-indicator").style.animation = "";
@@ -482,7 +500,7 @@ function initialise() {
   document.querySelector(".target-move").style.animation = "";
   target.classList.remove("target-move");
 
-  const gameContainer = document.querySelector(".game-container");
+  const gameContainer = document.querySelector("#game-container");
   gameContainer.style.animation = "";
   gameContainer.style.opacity = 1;
 }
@@ -495,7 +513,7 @@ window.addEventListener("keydown", (e) => {
     if (e.keyCode == currentKey.id) {
       currentKey.className = "pressed-key";
     } else {
-      document.querySelector(".arrow-keys").innerHTML = currentKeysHTML;
+      document.querySelector("#arrow-keys").innerHTML = currentKeysHTML;
     }
   }
 });
