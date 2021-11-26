@@ -149,6 +149,8 @@ function grading() {
     chainMultiple = -1;
   }
 
+  scoreboard[grade] += 1;
+
   const multiplier = {
     miss: 0,
     bad: 0.5,
@@ -156,8 +158,6 @@ function grading() {
     great: 1.5,
     perfect: 2 ** Math.max(1, chainMultiple + 1),
   };
-
-  scoreboard[grade] += 1;
 
   const gradeDOM = document.querySelector(".grade");
   if (grade === "perfect" && chainMultiple > 0) {
@@ -212,10 +212,20 @@ function nextLevel() {
   randomiseKeys(Math.floor(level));
 }
 
+function levelInterval() {
+  const levelID = setInterval(() => {
+    if (remainingTime === 0) {
+      clearInterval(levelID);
+    }
+    nextLevel();
+  }, playTime);
+}
+
 function randomiseKeys(lvl) {
   currentKeys = [];
   document.querySelector("#arrow-keys").innerHTML = "";
   currentRound++;
+
   for (let i = 1; i <= lvl; i++) {
     const keyCode = Math.floor(Math.random() * 4) + 37;
 
@@ -257,11 +267,60 @@ function randomiseKeys(lvl) {
   currentKeysHTML = document.querySelector("#arrow-keys").innerHTML;
 }
 
+function chance3(e) {
+  if (e.keyCode === 46) {
+    if (chance === "off") {
+      chance = "on";
+      const chanceButton = document.createElement("div");
+      chanceButton.id = "chance";
+      chanceButton.innerText = "C";
+      document
+        .querySelector("#game-container")
+        .insertAdjacentElement("afterend", chanceButton);
+    } else {
+      chance = "off";
+      document.querySelector("#chance").remove();
+    }
+  }
+}
+
 function defaultMiss() {
   if (document.querySelector(".key")) {
     pressTime = currentPosition;
     grading();
   }
+}
+
+function missInterval() {
+  const missID = setInterval(() => {
+    if (remainingTime === 0) {
+      clearInterval(missID);
+    }
+    defaultMiss();
+  }, playTime);
+}
+
+function timer() {
+  remainingTime = Math.max(0, remainingTime - 1000);
+
+  let minutes = Math.floor(remainingTime / 1000 / 60);
+  let seconds = 0;
+  if ((remainingTime / 1000) % 60 >= 10) {
+    seconds = (remainingTime / 1000) % 60;
+  } else {
+    seconds = `0${(remainingTime / 1000) % 60}`;
+  }
+  document.querySelector("#time").innerText = `${minutes}:${seconds}`;
+}
+
+function timerInterval() {
+  const timerID = setInterval(() => {
+    if (remainingTime === 0) {
+      clearInterval(timerID);
+      songEnd();
+    }
+    timer();
+  }, 1000);
 }
 
 function spacebar(e) {
@@ -271,6 +330,41 @@ function spacebar(e) {
     document.querySelector("#arrow-keys").innerHTML = "";
     window.removeEventListener("keydown", spacebar);
     spacebarSound();
+  }
+}
+
+function playAudio(songChosen) {
+  const audio = document.querySelector(`#${songChosen}`);
+  if (audio.readyState >= 2) {
+    audio.play();
+    setTimeout(startGame, delay);
+  }
+}
+
+function songList() {
+  const selectedItem = document.querySelector("select").value;
+  bpm = songs[selectedItem]["bpm"];
+  duration = songs[selectedItem]["duration"];
+  delay = songs[selectedItem]["delay"];
+  const volume = songs[selectedItem]["volume"];
+  songChosen = selectedItem;
+
+  document.querySelector(`#${songChosen}`).volume = volume;
+
+  endTime = startTime + duration;
+  remainingTime = endTime - startTime;
+  playTime = (4 / bpm) * 60 * 1000;
+}
+
+function spacebarSound() {
+  const sound = document.querySelector("#spacebar-sound");
+  sound.volume = 0.2;
+  sound.play();
+}
+
+function fullScreen(e) {
+  if (e.keyCode === 70) {
+    document.querySelector("body").requestFullscreen();
   }
 }
 
@@ -285,33 +379,12 @@ function startGame() {
 
   window.requestAnimationFrame(getPosition);
 
-  const timerID = setInterval(timer, 1000);
-
   document.querySelector("#progress-indicator").style.animation = `time ${
     duration / 1000
   }s linear 1 forwards`;
 
-  function missInterval() {
-    const missID = setInterval(() => {
-      if (remainingTime === 0) {
-        clearInterval(missID);
-      }
-      defaultMiss();
-    }, playTime);
-  }
-
-  function levelInterval() {
-    const levelID = setInterval(() => {
-      if (remainingTime === 0) {
-        clearInterval(levelID);
-      }
-      nextLevel();
-    }, playTime);
-  }
-
   setTimeout(() => {
     defaultMiss();
-
     missInterval();
   }, playTime * 0.9);
 
@@ -320,64 +393,48 @@ function startGame() {
     levelInterval();
   }, playTime * 0.901);
 
+  timer();
+  timerInterval();
+
   randomiseKeys(1);
+}
 
-  function timer() {
-    remainingTime = Math.max(0, remainingTime - 1000);
+function songEnd() {
+  window.removeEventListener("keydown", spacebar);
 
-    let minutes = Math.floor(remainingTime / 1000 / 60);
-    let seconds = 0;
-    if ((remainingTime / 1000) % 60 >= 10) {
-      seconds = (remainingTime / 1000) % 60;
-    } else {
-      seconds = `0${(remainingTime / 1000) % 60}`;
-    }
-    document.querySelector("#time").innerText = `${minutes}:${seconds}`;
+  const gameContainer = document.querySelector("#game-container");
+  gameContainer.style.animation = "fadeout 1s 1 forwards";
 
-    if (remainingTime === 0) {
-      songEnd();
-    }
+  const audio = document.querySelector(`#${songChosen}`);
+  audio.pause();
+  audio.currentTime = 0;
+
+  displayScoreboard();
+
+  if (score > songs[songChosen]["highScore"]) {
+    songs[songChosen]["highScore"] = score;
   }
 
-  function songEnd() {
-    clearInterval(timerID);
-
-    window.removeEventListener("keydown", spacebar);
-
-    const gameContainer = document.querySelector("#game-container");
-    gameContainer.style.animation = "fadeout 1s 1 forwards";
-
-    const audio = document.querySelector(`#${songChosen}`);
-    audio.pause();
-    audio.currentTime = 0;
-
-    displayScoreboard();
-
-    if (score > songs[songChosen]["highScore"]) {
-      songs[songChosen]["highScore"] = score;
-    }
-
-    if (
-      !localStorage.getItem(`highscore.${songChosen}`) ||
-      songs[songChosen]["highScore"] >
-        Number(
-          localStorage.getItem(`highscore.${songChosen}`).replace(/[^\d]/g, "")
-        )
-    ) {
-      localStorage.setItem(
-        `highscore.${songChosen}`,
-        songs[songChosen]["highScore"].toLocaleString("en")
-      );
-    }
-
-    if (document.querySelector("#chance")) {
-      document.querySelector("#chance").remove();
-    }
-
-    const retry = document.querySelector("#retry");
-    retry.style.display = "flex";
-    retry.addEventListener("click", initialise);
+  if (
+    !localStorage.getItem(`highscore.${songChosen}`) ||
+    songs[songChosen]["highScore"] >
+      Number(
+        localStorage.getItem(`highscore.${songChosen}`).replace(/[^\d]/g, "")
+      )
+  ) {
+    localStorage.setItem(
+      `highscore.${songChosen}`,
+      songs[songChosen]["highScore"].toLocaleString("en")
+    );
   }
+
+  if (document.querySelector("#chance")) {
+    document.querySelector("#chance").remove();
+  }
+
+  const retry = document.querySelector("#retry");
+  retry.style.display = "flex";
+  retry.addEventListener("click", initialise);
 }
 
 function displayScoreboard() {
@@ -421,58 +478,6 @@ function displayScoreboard() {
     "fadein 1.5s 1 forwards";
 }
 
-function playAudio(songChosen) {
-  const audio = document.querySelector(`#${songChosen}`);
-  if (audio.readyState >= 2) {
-    audio.play();
-    setTimeout(startGame, delay);
-  }
-}
-
-function songList() {
-  const selectedItem = document.querySelector("select").value;
-  bpm = songs[selectedItem]["bpm"];
-  duration = songs[selectedItem]["duration"];
-  delay = songs[selectedItem]["delay"];
-  const volume = songs[selectedItem]["volume"];
-  songChosen = selectedItem;
-
-  document.querySelector(`#${songChosen}`).volume = volume;
-
-  endTime = startTime + duration;
-  remainingTime = endTime - startTime;
-  playTime = (4 / bpm) * 60 * 1000;
-}
-
-function spacebarSound() {
-  const sound = document.querySelector("#spacebar-sound");
-  sound.volume = 0.2;
-  sound.play();
-}
-
-function fullScreen(e) {
-  if (e.keyCode === 70) {
-    document.querySelector("body").requestFullscreen();
-  }
-}
-
-function chance3(e) {
-  if (e.keyCode === 46) {
-    if (chance === "off") {
-      chance = "on";
-      const chanceButton = document.createElement("div");
-      chanceButton.id = "chance";
-      chanceButton.innerText = "C";
-      document
-        .querySelector("#game-container")
-        .insertAdjacentElement("afterend", chanceButton);
-    } else {
-      chance = "off";
-      document.querySelector("#chance").remove();
-    }
-  }
-}
-
 function initialise() {
   level = 1;
   score = 0;
@@ -505,6 +510,8 @@ function initialise() {
   gameContainer.style.opacity = 1;
 }
 
+// ------------ Event Listeners -------------
+
 // arrow keys
 window.addEventListener("keydown", (e) => {
   if (uniCode[e.keyCode]) {
@@ -521,19 +528,13 @@ window.addEventListener("keydown", (e) => {
 // spacebar:
 window.addEventListener("keydown", spacebar);
 
+window.addEventListener("keydown", fullScreen);
+window.addEventListener("keydown", chance3);
+
 document.querySelector("#start-button").addEventListener("click", () => {
   document.querySelector("#screen-1").style.display = "none";
   document.querySelector("#screen-2").style.display = "flex";
   document.querySelector("#screen-2").style.animation = "fadein 1s 1";
-
-  let minutes = Math.floor(duration / 1000 / 60);
-  let seconds = 0;
-  if ((duration / 1000) % 60 >= 10) {
-    seconds = (duration / 1000) % 60;
-  } else {
-    seconds = `0${(duration / 1000) % 60}`;
-  }
-  document.querySelector("#time").innerText = `${minutes}:${seconds}`;
 
   songList();
   playAudio(songChosen);
@@ -552,7 +553,3 @@ document.querySelector("#start-button").addEventListener("click", () => {
   highScoreDiv.append(highScore);
   document.querySelector("#game-page").prepend(highScoreDiv);
 });
-
-window.addEventListener("keydown", fullScreen);
-
-window.addEventListener("keydown", chance3);
