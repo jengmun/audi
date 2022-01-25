@@ -10,7 +10,7 @@
 
 This game was inspired by the game AuditionSEA which I played frequently as a child and was built as an educational project.
 
-Please visit <a href ="https://jengmun.github.io">this link<a> to play the game.
+Please visit <a href ="https://audition.netlify.app">this link<a> to play the game.
 
 # Features
 
